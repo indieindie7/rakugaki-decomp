@@ -51,10 +51,10 @@
 0x801a03ac func biosB0_TestEvent_2 hand rules: BIOS B0(0b) call stub
 0x801a0d9c func biosA0_InitHeap_2 hand rules: BIOS A0(39) call stub
 0x801a18dc func biosB0_FileWrite_2 hand rules: BIOS B0(35) call stub
-0x800005f0 func bios_cdDeliverEventsA hand provisional: BIOS CD driver, repeated B0 DeliverEvent(0xf0000003) with specs 0x20,0x80,0x8000,0x100,0x200
-0x8000066c func bios_cdDeliverEventsB hand provisional: BIOS CD driver, DeliverEvent(0xf0000003) with specs 0x40,0x10,0x20,0x80,0x8000,0x100,0x200
-0x800011b4 func bios_cdCmdSetloc hand provisional: waits CD status ready, writes command 2 with one parameter byte to 0x1f801801/02
-0x800012ec func bios_cdCmdSetmode hand provisional: stores args, writes CD command 0x0e (Setmode) with mode byte param_3 to 0x1f801801/02
+0x800005f0 func bios_cdDeliverEventsA hand BIOS CD driver, repeated B0 DeliverEvent(0xf0000003) with specs 0x20,0x80,0x8000,0x100,0x200
+0x8000066c func bios_cdDeliverEventsB hand BIOS CD driver, DeliverEvent(0xf0000003) with specs 0x40,0x10,0x20,0x80,0x8000,0x100,0x200
+0x800011b4 func bios_cdCmdSetloc hand waits CD status ready, writes command 2 with one parameter byte to 0x1f801801/02
+0x800012ec func bios_cdCmdSetmode hand stores args, writes CD command 0x0e (Setmode) with mode byte param_3 to 0x1f801801/02
 0x80001434 func bios_cdAckIrqFlags hand CD index 1, writes 0x1f to 0x1f801803 acknowledging interrupt flags
 0x80001470 func bios_cdSetIrqEnable hand CD index 1, writes 0x1f to 0x1f801802 interrupt enable register
 0x8000148c func bios_cdInit hand CD init: clears irq/dma bits, sets DMA3 control 0x1f8010f0, sends command 0x0a (Init), polls result
@@ -68,7 +68,7 @@
 0x80003658 func sio_endPortSelect hand writes 0xff to pad buffer byte, toggles SIO control 0x1f80104a for port, short delay
 0x800036d0 func sio_resetControl hand SIO mode 0x88, baud 0xd, control cycling 0/2/0x2002 with delays, clears state
 0x80003744 func sio_irqHandler hand SIO irq handler: increments counter, calls per-port state function table at 0x4b38, acks I_STAT bit 7
-0x8000395c func sio_padTransferPort hand provisional: drives SIO port transfer with 0x1f801040 data, waits status bits, per-port buffer
+0x8000395c func sio_padTransferPort hand drives SIO port transfer with 0x1f801040 data, waits status bits, per-port buffer
 0x80003fd4 func pad_InitPAD hand InitPAD: printf via biosA0, stores two pad buffers and clears them, sets handler pointers
 0x800040c8 func pad_StartPAD hand StartPAD: resets SIO, swaps handler list 2, enables vblank irq bit0, sets running flag
 0x80004144 func pad_StopPAD hand StopPAD: critical section, restores slot 3, removes handler from list 2
@@ -79,7 +79,7 @@
 0x80033ca0 func game_InitGlobalState hand big init: default flags, per-player 8-entry tables, calls GPU init (0x140x0xf0 draw env), clears VRAM areas
 0x80034124 func game_ResetMatchState hand resets per-round state: calls sub-inits, clears player slots by mode, calls 80038278(0x40,2,32000)
 0x80034278 func ui_DrawNumber3Digits hand splits value into hundreds/tens/ones glyph codes from table 800a3bf0, calls text draw 80043348 with 7,8
-0x80034410 func game_ToggleDebugHpOverlay hand provisional: pad combo toggles overlay of player hp percent (+0x184/+0x186) and team average, writes OT link
+0x80034410 func game_ToggleDebugHpOverlay hand pad combo toggles overlay of player hp percent (+0x184/+0x186) and team average, writes OT link
 0x800348b0 func game_DebugPadSetPlayerHp hand pad button combos set all/first player hp (+0x184) to 0 or 0xffff, with repeat counter
 0x80034b0c func game_MainFrameLoop hand per-frame loop: toggles double buffer, VSync(-1) frame delta, clears OT, runs update/draw tasks
 0x80035088 func game_RunStageFlow hand sets up current stage by mode table, string STGBIN\STGTI.BIN, runs stage entry then frame loop
@@ -140,7 +140,7 @@
 0x80038278 func gfx_InitDepthCueAndScreen hand sets light/fog globals (0x19,100,100,gray 0x80), calls 8008e7e4 offset and 8008edd4/8008ed54 scale
 0x8003830c func cam_InitView hand calls 8008e7c4(400) projection distance, clears camera angle/pos, initialises two view matrices from template 800faba0
 0x800383e0 func cam_UpdateViewMatrix hand builds rotation matrix from camera angles, loads GTE rotation/translation registers via setCopControlWord
-0x8003844c func cam_UpdateViewMatrixTail hand provisional: tail fragment of view-matrix build using caller registers, loads GTE control regs
+0x8003844c func cam_UpdateViewMatrixTail hand tail fragment of view-matrix build using caller registers, loads GTE control regs
 0x800385b8 func gfx_SetMatrixTranslationPtr hand stores param2+0x2c into param1+0x74 pointer
 0x800385f0 func gte_TransformVecByObjMatrix hand rotates short vector (shifted <<2) by object matrix at +0x2c, outputs >>2 shorts
 0x800386ac func gte_ProjectWorldPoint hand shifts world point <<2, calls RotTransPers 80090414, outputs screen xy, returns depth>>2
@@ -164,7 +164,7 @@
 0x8003aa04 func collbox_Free hand clears extents and in-use flag of box slot
 0x8003aa50 func collbox_GetPtr hand returns pointer to 0x28-byte box slot at 800e4710
 0x8003aa70 func collbox_OverlapsAny hand tests object position against all used boxes other than self by abs differences, returns 1 on overlap
-0x8003abec func col_MoveObjectVsBoxes hand provisional: swept move of object velocity against all boxes on x,y,z, adjusts velocity and positions
+0x8003abec func col_MoveObjectVsBoxes hand swept move of object velocity against all boxes on x,y,z, adjusts velocity and positions
 0x8003b3fc func col_SnapToBoxTop hand finds lowest box top over object footprint, writes new y velocity word (+4) and returns changed flag
 0x8003b5d0 func col_ResolveObjectMove hand clears 6 contact bytes (+0x20), runs region test 80036840 and col_MoveObjectVsBoxes
 0x8003b630 func col_ResolveVerticalContact hand sets contact byte +0x23 from box snap else sphere-region test
@@ -235,32 +235,32 @@
 0x80040514 func char_AddPlayerSlot hand finds first unused of four player slots, sets flag 7 and character type
 0x80040568 func music_RequestTrack hand stores requested XA track in 800e5618 and remembers last non-6/7 track at 800a4838
 0x8004058c func gfx_DrawCenteredRect hand POLY_F4 gray semi-trans rect centered at 160,120 with half-size args plus draw mode packet
-0x8004070c func ui_UpdatePauseOverlay hand provisional: pause task, checks connected-pad bits 800e7751, pad edge 0x2000, fades music, handles resume
+0x8004070c func ui_UpdatePauseOverlay hand pause task, checks connected-pad bits 800e7751, pad edge 0x2000, fades music, handles resume
 0x80040b0c func ui_SpawnPauseTask hand spawns persistent task (prio 1) running ui_UpdatePauseOverlay and stores pad connect bits
 0x80040b70 func game_BeginStageTasks hand spawns core task 8005a7e4, inits effects, calls stage init callback, picks background by stage id
 0x80040c7c func game_StartMatchTasks hand spawns pause task and sets round flags, copies timer
 0x80040cc4 func ui_ClearMenuTaskState hand zeroes fields of menu task struct, sets persistent flag, resets texture anim 4
 0x80040d34 func ui_DrawTextListWithBackdrop hand draws up to n strings at x=0x20 with 16px spacing, then gray semi-trans full-width box and draw mode packet
-0x80040d78 func ui_DrawTextListTail hand provisional: tail of text list draw loop, strings at x=0x20 step 0x10 then gray backdrop POLY_F4 and draw mode
+0x80040d78 func ui_DrawTextListTail hand tail of text list draw loop, strings at x=0x20 step 0x10 then gray backdrop POLY_F4 and draw mode
 0x80040f30 func opt_SaveSettingsBackup hand copies option bytes at 800aecf8.. (4x8 entries) into backup block at 800f2378
 0x80040ff8 func opt_RestoreSettingsBackup hand copies option block from backup at 800f2378 back to 800aecf8..
 0x800410c0 func menu_WaitMessageDone hand draws message box, resets counter on pad press, counts down then sets next state and returns 1
 0x8004114c func menu_CheckCardResult hand if status call returns 1..2 sets state 0x105d and 180 frame timer, returns 1
-0x800411a4 func menu_SaveLoadTask hand provisional: big state machine for memory card save/load menu, messages, confirm, error timers
+0x800411a4 func menu_SaveLoadTask hand big state machine for memory card save/load menu, messages, confirm, error timers
 0x800423a0 func menu_SpawnSaveLoadTask hand spawns menu_SaveLoadTask 0x3c bytes with mode 0x1000 and message tables
 0x8004243c func menu_SpawnSaveLoadTaskMsg hand spawns menu_SaveLoadTask with mode 0x1300 and caller message pointer param
 0x800424d8 func menu_SpawnSaveLoadTaskAlt hand spawns message variant task with table 800a4db4 and sets request flag
 0x80042520 func menu_SpawnIfOptionBit8 hand if option flag bit 8 set spawns save/load task mode 0x1500 else clears pointer
 0x80042584 func fx_SpawnSparkLines hand loops entries of 4 shorts creating random sparkle effect objects via 800758f8 per entry
 0x8004274c func fx_TransitionTask hand state machine interpolating two values with 80038104, draws sparks, then full-screen quad fade
-0x80042a54 func fx_DrawTransitionQuadTail hand provisional: tail of transition task, finishes POLY_F4 quad at 160,120 offsets then draw mode packet
+0x80042a54 func fx_DrawTransitionQuadTail hand tail of transition task, finishes POLY_F4 quad at 160,120 offsets then draw mode packet
 0x80042b70 func fx_SpawnTransitionTask hand spawns transition task (prio 3, 0x24 bytes) with effect table param
 0x80042bb4 func fx_SpawnTransitionA hand spawns transition task with table 800a4e5c
 0x80042bd8 func fx_SpawnTransitionB hand spawns transition task with table 800a4e8c
 0x80042c1c func math_AngleToOctant hand atan2 of two shorts, returns ((angle-0x1c0)>>7)&7 octant
 0x80042c5c func math_AngleOctantRelative hand octant of atan2 plus param, relative to angle in 800e7fd6, via 8003779c
 0x80042cd8 func col_ProbeOffset hand builds probe box from object pos plus offsets, calls 8003b3fc and returns height change
-0x80042d78 func ai_CheckNearEdge hand provisional: tests if target within 0x20/0x40 units else computes probe and sets avoid bits at +0x1bc
+0x80042d78 func ai_CheckNearEdge hand tests if target within 0x20/0x40 units else computes probe and sets avoid bits at +0x1bc
 0x80042f28 func font_DrawGlyphFT4 hand builds 16x16 POLY_FT4 textured glyph from index, color, x, y and OT slot
 0x800430dc func font_ShiftJisToGlyph hand maps Shift-JIS codes (digits, latin, hiragana, katakana, punctuation) to glyph index, 0xff unknown
 0x80043298 func font_DrawSjisCharShadow hand draws one SJIS glyph in color plus black shadow offset by 1 pixel
@@ -302,7 +302,7 @@
 0x800453f8 func snd_QueueEffectForChar hand queues effect for character from table 800e7760 if index<0x100
 0x80045444 func snd_StopEffectForChar hand stops effect for character from table 800e7760 if index<0x100
 0x80045498 func gfx_DrawSizedSpriteFT4 hand builds textured quad centered at x,y sized by table entry (0x1c stride) and scale into high OT slot
-0x80045708 func ui_SelectStageLabelIds hand provisional: picks label ids from stage mode, player count and team numbers for result display
+0x80045708 func ui_DrawStageLabelSprites hand picks label ids from stage mode, player count and team numbers for result display (was ui_SelectStageLabelIds)
 0x800459d0 func ui_BannerTask hand state machine task: slides banner in with quadratic ease, holds, slides out, draws via POLY_F4
 0x80045e68 func ui_SpawnBannerTask hand spawns banner task prio 3 size 0x30
 0x80045ea0 func fx_InitEffectParams hand calls 80075a18 then sets scale fields 0x1000 and clears flag
@@ -506,24 +506,24 @@
 0x80053dd0 func char_ApplyThrowFriction hand decelerates x,z velocity and y by weight friction with clamps, moves by angle 8004c020
 0x80053f84 func char_UpdateThrownSpin hand throw friction then rotates velocity into facing frame, sets team and hit params, long branching
 0x800547f8 func char_UpdateThrownTimeout hand throw friction, enters air state when timer passes limit, impact on ground contact
-0x80054878 func chr_UpdateSpinAirLand hand spins facing 0x8c by +-0x80 per frame; calls 80053dd0, landing 80050898 when falling and grounded
-0x80054924 func chr_UpdateSlideFriction hand ground slide: decelerates x velocity by friction from params 0x24/0x28, calls 8004c020, 800617fc dust effect
-0x80054b8c func chr_UpdateFallGravity hand adds gravity 0x2c to vy capped 0x80000, moves y, lands via 80050c18 or 80050d90 by state 0x43
-0x80054c24 func chr_UpdateKnockbackAirOrLand hand while stunned in air: pad input decides recover (8004fd84) or landing handlers 80050c18/80050bc0/80050bec by state 0x51
-0x80054dac func chr_UpdateDownedGetUp hand knocked-down timer 0x94; on ground wait then 80050744 or rise; airborne branch calls 80050dbc/80050df8 state 0x53
-0x80054f2c func chr_UpdateSwingArcSine hand angle 0x94 indexes sine table 80031468 for horizontal speed, pendulum swing with timer 0x92, ends via 8004f5b0
-0x80055068 func chr_UpdateCarryStateInput hand held/carry state: checks button masks 0x1bc and timer 0xa6, goes to idle 8004f5b0/8004fb1c or 800513e0/800514cc
-0x80055164 func chr_UpdateFadeBrighten hand adds 2 to colour bytes 0xce-0xd0 each frame until sign flips, then idle 8004f5b0
-0x800551dc func chr_UpdateFadeToBlack hand decrements colour bytes 0xce-0xd0 to zero, then sets mode 0xe=2 (removed)
-0x80055244 func chr_UpdateHeldByOpponent hand while grabbed by character at 0x16c: mash buttons 0x1be increments 0x92, escape to idle after 0x1f
-0x80055340 func chr_UpdateAirborneMotion hand integrates velocity into position, per-state spin of facing 0x8c, states 0x49 0x6c, direction via 8004bb4c
-0x80055808 func chr_DispatchQueuedAction hand switch on action command byte 0x198 (1..0x40, +0x80 variants) calling 800504xx-80051138 action starters
-0x80055a04 func chr_DispatchStateByMode hand switch on mode byte 0xb0 calling per-mode update handlers 800516ac-80051e0c, 800551dc for 0x2f
-0x80055c78 func chr_UpdateHitShakeOffset hand countdown 0x180; alternates +-half of amplitude 0x191 into offset 0xac by frame parity DAT_800e7758
-0x80055d14 func chr_DecayHitStunMeter hand decrements byte 0x192 by 1 or 2 toward 0x193; calls 8004f4e4 at zero
-0x80055d84 func chr_ComputeHitStretchVerts hand sine-table (80031468) squash/stretch of four corner vertex offsets 0xdc-0xea using 8004bab0 rotate
-0x80056258 func chr_ProcessPadAndMove hand reads pad via 8004b980 into 0x1bc/0x1be, sets speed scale 0x7e/0x80, large per-frame control update
-0x80056c24 func chr_PlaceChildAtAttachPoint hand rotates table offset (12 byte entries by frame 0x140) by facing and writes position/flip into param_2 object
+0x80054878 func char_UpdateSpinAirLand hand spins facing 0x8c by +-0x80 per frame; calls 80053dd0, landing 80050898 when falling and grounded
+0x80054924 func char_UpdateSlideFriction hand ground slide: decelerates x velocity by friction from params 0x24/0x28, calls 8004c020, 800617fc dust effect
+0x80054b8c func char_UpdateFallGravityState43 hand adds gravity 0x2c to vy capped 0x80000, moves y, lands via 80050c18 or 80050d90 by state 0x43
+0x80054c24 func char_UpdateKnockbackAirOrLand hand while stunned in air: pad input decides recover (8004fd84) or landing handlers 80050c18/80050bc0/80050bec by state 0x51
+0x80054dac func char_UpdateDownedGetUp hand knocked-down timer 0x94; on ground wait then 80050744 or rise; airborne branch calls 80050dbc/80050df8 state 0x53
+0x80054f2c func char_UpdateSwingArcSine hand angle 0x94 indexes sine table 80031468 for horizontal speed, pendulum swing with timer 0x92, ends via 8004f5b0
+0x80055068 func char_UpdateCarryStateInput hand held/carry state: checks button masks 0x1bc and timer 0xa6, goes to idle 8004f5b0/8004fb1c or 800513e0/800514cc
+0x80055164 func char_UpdateFadeBrighten hand adds 2 to colour bytes 0xce-0xd0 each frame until sign flips, then idle 8004f5b0
+0x800551dc func char_UpdateFadeToBlack hand decrements colour bytes 0xce-0xd0 to zero, then sets mode 0xe=2 (removed)
+0x80055244 func char_UpdateHeldByOpponent hand while grabbed by character at 0x16c: mash buttons 0x1be increments 0x92, escape to idle after 0x1f
+0x80055340 func char_UpdateAirborneMotion hand integrates velocity into position, per-state spin of facing 0x8c, states 0x49 0x6c, direction via 8004bb4c
+0x80055808 func char_DispatchQueuedAction hand switch on action command byte 0x198 (1..0x40, +0x80 variants) calling 800504xx-80051138 action starters
+0x80055a04 func char_DispatchStateByMode hand switch on mode byte 0xb0 calling per-mode update handlers 800516ac-80051e0c, 800551dc for 0x2f
+0x80055c78 func char_UpdateHitShakeOffset hand countdown 0x180; alternates +-half of amplitude 0x191 into offset 0xac by frame parity DAT_800e7758
+0x80055d14 func char_DecayHitStunMeter hand decrements byte 0x192 by 1 or 2 toward 0x193; calls 8004f4e4 at zero
+0x80055d84 func char_ComputeHitStretchVerts hand sine-table (80031468) squash/stretch of four corner vertex offsets 0xdc-0xea using 8004bab0 rotate
+0x80056258 func char_ProcessPadAndMove hand reads pad via 8004b980 into 0x1bc/0x1be, sets speed scale 0x7e/0x80, large per-frame control update
+0x80056c24 func char_PlaceChildAtAttachPoint hand rotates table offset (12 byte entries by frame 0x140) by facing and writes position/flip into param_2 object
 0x80056de0 func ai_SelectModeFromTargetAction hand sets AI mode byte 0x214 and timer 0x216 from target mode 0xb0 values 0x28 0x27 0x2a
 0x80056e7c func ai_PickIdleWaitTime hand if no timer 0x220 set 0x216 = rand(0x3c, via 8006679c)+0x3c
 0x80056ebc func ai_WanderToRandomPoint hand picks random target offset in arena bounds DAT_800e79bc.., moves via 8004ee38
@@ -531,7 +531,7 @@
 0x800571f8 func ai_ApproachTargetAtAngle hand computes angle to target with 80049a18, picks standoff point 0x3000000 away, rotates by 8004bb4c
 0x80057628 func ai_PickAttackTargetInRange hand selects target (8004ce2c or 8004cacc) and tests reach with params 0x1c/0x20, returns bool
 0x80057850 func ai_UpdateAttackApproachPad hand for modes 0x27/0x2a builds fake pad input via 8004e948 (idle) or 8004e8ac toward target
-0x80057928 func coll_ClampPointToBoxes hand provisional: clamps point into intersection of centre/half-extent short boxes, switch case 6, calls 80045168
+0x80057928 func coll_SpawnHitEffects hand clamps point into intersection of centre/half-extent short boxes, switch case 6, calls 80045168 (was coll_ClampPointToBoxes)
 0x80058270 func hit_SetKnockbackAngles hand copies hit angle bytes 0x161/0x165 to victim 0x199/0x19a by mode 0x163 using facing DAT_800e7fd6
 0x800584d8 func coll_TestAttackVsHurtbox hand loops group 800e8010 vs 800e8d30 pairs, team byte 0x194 differs, bitmask 0x178/0x17c, overlap test
 0x80058b7c func coll_TestCharVsChar hand loops group 800e8010 against itself, different teams, bit-mask test then overlap and hit response
@@ -540,15 +540,15 @@
 0x8005a274 func coll_TestProjectileVsItem hand loops group 800e8e70 vs 800e8830, skips states 0x80-0xff and mode 0x24, computes nearest distance
 0x8005a7e4 func coll_UpdateDispatch hand by mode 0xe: 1 runs all collision pass functions then clears counts; 0 clears struct; 2 calls 8003a744
 0x8005a994 func script_EvalCondition hand evaluates scripted condition (pad bits, compare ops 0-4) updating 3-byte step state, advancing counters
-0x8005ac38 func fx_UpdateOffscreenIndicatorArrow hand provisional: clamps indicator pos 0xbc/0xbe to screen edge ellipse (0x120,0xb8), draw 800758f8, 8003a744
-0x8005b0dc func fx_UpdateOffscreenIndicatorColored hand provisional: edge-clamped indicator with colour bytes 0xce-0xd0 by mode 0x28, velocity clamp vs screen bounds, draw 800758f8
+0x8005ac38 func fx_UpdateOffscreenIndicatorArrow hand clamps indicator pos 0xbc/0xbe to screen edge ellipse (0x120,0xb8), draw 800758f8, 8003a744
+0x8005b0dc func fx_UpdateOffscreenIndicatorColored hand edge-clamped indicator with colour bytes 0xce-0xd0 by mode 0x28, velocity clamp vs screen bounds, draw 800758f8
 0x8005b58c func fx_UpdateDecayingTrail hand effect object state 0xe (0 wait,1 run,2 wait,3 free via 8003a744); loop up to 256 steps decaying values by 3/4
 0x8005bb84 func fx_UpdateFadeBrightnessSprite hand effect fixed-step loop on 0x8c vs DAT_800e774e, brightness bytes 0x26-0x28 from 0x8e/0x90 ratio, draw 8004b87c
 0x8005bf68 func fx_UpdateDelayedScaledSprite hand effect with start delay 0x13c, scale via 8004995c from 0x7c*0x84, frees via 8003aa04/8003a744
 0x8005c428 func fx_UpdateDragParticle hand effect fixed-step: velocity *32/33 drag, adds accel 0x92/0x94 to 0x28/0x2c, screen cull 0xb7, draw 800758f8
 0x8005cb00 func fx_UpdateModeSwitchedSprite hand effect with switch on mode byte 0xb0, step counter 0xb4, ends state 2 when 0x92 negative, draw 8004b87c
 0x8005cf0c func fx_UpdateOwnerFollowSprite hand effect following owner object at 0xb0 (ends when owner gone), brightness from owner 0x96, draw 8004b87c
-0x8005d3e8 func fx_UpdateMultiPartEffect hand provisional: very large effect update (4 KB) with state 0xe, many locals, clears 0x150 link at end
+0x8005d3e8 func fx_UpdateMultiPartEffect hand very large effect update (4 KB) with state 0xe, many locals, clears 0x150 link at end
 0x8005e398 func fx_UpdateRadialBurstSprites hand effect nested loops 8x4 draws with 8004b87c, grey level from 0x8e decreasing by 4 per step
 0x8005e56c func fx_UpdateDelayedSwitchSprite hand effect with delay 0x13c, scale via 8004995c, switch on sub-mode, ends state 2
 0x8005eb10 func fx_UpdateTableAnimatedSprite hand effect taking param_2 table pointer, delay 0x13c, scale 8004995c x3 axes, draw 80038f18
@@ -590,7 +590,7 @@
 0x800624d0 func fx_SpawnPopRing6 hand spawns 6 sprites 100 mode 6 spaced 0xaa angle with upward velocity, plus centre sprite 0x15
 0x800626c0 func fx_SpawnOffscreenIndicatorColored hand allocs updater 8005b0dc at character position, blink by frame counter DAT_800e7758, life from pad index 0x1b3
 0x80062904 func fx_SpawnOffscreenIndicator hand returns 0 if char on screen (0xbc<0xa0,0xbe<0x78) else allocs updater 8005ac38 arrow at character
-0x80062be4 func fx_SpawnCharacterTrailEffect hand provisional: allocs 0x158 object updater 8005d3e8 sprite 0x52 at character body point, links param_2 at 0x154
+0x80062be4 func fx_SpawnCharacterTrailEffect hand allocs 0x158 object updater 8005d3e8 sprite 0x52 at character body point, links param_2 at 0x154
 0x80062e1c func fx_SpawnCharacterTrailEffect_Lit hand calls fx_SpawnCharacterTrailEffect then sets brightness bytes 0x7a/0x7b to 1
 0x80062e54 func fx_SpawnOwnerGhostPoly hand allocs 0xb4 object updater 8005cf0c sprite 0x52, copies quad vertices 0x60-0x6c from owner and links owner at 0xb0
 0x80062f68 func fx_SpawnFadingCopyOfPoly hand allocs 0xb4 object updater 8005bb84, copies owner sprite id, vertex coords 0x60-0x6c and fade timers
@@ -623,9 +623,9 @@
 0x80064ec8 func proj_UpdateByType hand switch on type 0x98: 0 linear, 1 gravity, 2 homing projectile update
 0x80064f44 func fx_UpdateSlotTrackedSprite hand effect with owner 0x1b0, frees slot DAT_800e7860[0x1b4] and decrements owner counter 0x1b8 on end, draw 80038f18
 0x800653b4 func proj_UpdateExpandingBlast hand grows scale 0x7c +0x10, sets hitbox fields 0x15e-0x165 and spawns hit volumes via 8004d024 at several sizes
-0x80065620 func proj_UpdateSpinningHitSprite hand provisional spins angles 0x84/0x86, moves along rotated forward, sets hitbox 0x15e.., frees via state 2 when timer 0xa6 expires
+0x80065620 func proj_UpdateSpinningHitSprite hand spins angles 0x84/0x86, moves along rotated forward, sets hitbox 0x15e.., frees via state 2 when timer 0xa6 expires
 0x800657e0 func fx_UpdateSlotSpriteTableA hand thin wrapper calling slot-tracked sprite updater 80064f44 with anim table PTR_FUN_800a6750
-0x80065804 func fx_UpdateSlotSpriteGeneric hand provisional state machine; clears dead owner 0x1b0, state 3 frees slot in DAT_800e7860 and decrements owner counter, draws
+0x80065804 func fx_UpdateSlotSpriteGeneric hand state machine; clears dead owner 0x1b0, state 3 frees slot in DAT_800e7860 and decrements owner counter, draws
 0x80065da0 func fx_UpdateFadingHitSprite hand fades colour bytes 0xce-0xd0 by timer 0x92/0x94, spawns hit volume 8004d024 at scale 3, state 2 at end
 0x80065ef4 func fx_UpdateSlotSpriteTableB hand thin wrapper calling generic slot sprite updater 80065804 with table PTR_FUN_800a6758
 0x80065f18 func fx_SpawnFadingHitSprite hand allocs 0x1c0 object updater 80065ef4, inits sub-structs, params 0x20 timers, spawns burst sprites via 80062344
@@ -648,55 +648,55 @@
 0x80066d40 func math_WorldToTargetYawPitch hand makes offset to target 0x20, atan2 yaw stored 0x3a, rotates, atan2 pitch stored 0x38, returns abs depth
 0x80066f68 func math_RotateByYawPitch hand rotates vector by pitch at 0x38 about X then yaw at 0x3a via sine table DAT_80031468
 0x800670e8 func ai_ClearTargetTables hand zeroes four global pointer and count variables 800f2778, 800f2770, 800f20f0, 800e8f70
-0x8006710c func chr_FindFreeCharSlot hand scans char pointer table PTR_PTR_800e7760 from index for first empty entry, returns 0xff if none
+0x8006710c func char_FindFreeCharSlot hand scans char pointer table PTR_PTR_800e7760 from index for first empty entry, returns 0xff if none
 0x80067170 func ai_PickTargetByPadDirection hand uses scratchpad 1f800000 and pad bits 0x1bc & 0xf0 to choose best enemy char in that direction
 0x8006751c func ai_PickTargetByPadDirection_2 hand variant of pad-direction target picker using scratchpad, returns char pointer or zero
 0x80067844 func ai_FindNearestEnemyChar hand loops chars skipping self, holder and other team, picks nearest via distance 80066d40 using scratchpad
 0x80067b5c func obj_ClearMotionFields hand zeroes position or velocity words 0xc-0x24, 0x96 and byte 0x9e
 0x80067b84 func obj_InitTransformBlock hand zeroes pos, vel, angles, 4 vertex slots, sets scale words 0x6c-0x78 to 0x100, colour 0xa3 to 0xff
-0x80067c54 func chr_InitParamBlock hand sets default char params: 100 hp values, bytes 6,2,8,5,3 and 0xfc
+0x80067c54 func char_InitParamBlock hand sets default char params: 100 hp values, bytes 6,2,8,5,3 and 0xfc
 0x80067cac func obj_ClearHitRecord hand zeroes 28-byte hit record words and bytes 4-7
 0x80067cd8 func obj_InitGrabRecord hand sets flag 8 at +0xd, zeroes fields 0x10,0x14,0x18, sets 0x1a to 0xff
-0x80067d04 func chr_InitFullCharStruct hand sets flags 10 at +0xd, inits transform, model 80038b30, sub-structs, sets 0x1b3 to 4 and param ptr DAT_800a675c
+0x80067d04 func char_InitFullCharStruct hand sets flags 10 at +0xd, inits transform, model 80038b30, sub-structs, sets 0x1b3 to 4 and param ptr DAT_800a675c
 0x80067d88 func obj_InitPlainObjectModelA hand sets flags 9 at +0xd, inits transform and model 80038b30, zeroes 0x134-0x13c
-0x80067dd4 func chr_InitFullCharStructAlt hand like chr_InitFullCharStruct but model inited with 80075a18
+0x80067dd4 func char_InitFullCharStructAlt hand like chr_InitFullCharStruct but model inited with 80075a18
 0x80067e58 func obj_InitPlainObjectModelB hand sets flags 9, inits transform and model via 80075a18, zeroes 0x134-0x13c
 0x80067ea4 func pad_DirBitsToIndex hand maps pad direction value 0x10,0x20,0x30,0x40 to 0x10,0x20,0x40,0x80 else zero
 0x80067f04 func coll_MoveObjectVsWorld hand builds sweep from pos and previous pos plus offsets, calls 8003b5d0 or 800370e8, sets ground flag 0x73, writes back position
 0x80068194 func coll_BuildBoxFromParams hand fills 6 shorts box from char params 0x1c and 0x20 shifted right 17, symmetric half-sizes
 0x80068204 func coll_TransformBoxScaleRotate hand scales template box by object scale 0x7e-0x82, rotates XY with 80066ae8, writes world box at +6..+0x10
-0x80068420 func chr_UpdateCharSweepCollision hand provisional scratchpad sweep of char hit volumes using facing 0x8a, params 0x1c/0x20, 0x1e0 list, ground flags 0x70
+0x80068420 func char_UpdateCharSweepCollision hand scratchpad sweep of char hit volumes using facing 0x8a, params 0x1c/0x20, 0x1e0 list, ground flags 0x70
 0x80068a50 func coll_TransformBoxScaleRotateYaw hand like coll_TransformBoxScaleRotate but rotates by yaw 0xce>>2 with 80066a04 and camera angle DAT_800e7fd6
-0x80068ca8 func chr_UpdateCharSweepCollisionYaw hand provisional variant of char sweep collision using yaw from 0xce>>2 instead of 0x8a
-0x800692d4 func chr_UpdateShadowGround hand provisional ground probe via 8003b630 below char when airborne, builds shadow primitive, draws via 800758f8
+0x80068ca8 func char_UpdateCharSweepCollisionYaw hand variant of char sweep collision using yaw from 0xce>>2 instead of 0x8a
+0x800692d4 func char_UpdateShadowGround hand ground probe via 8003b630 below char when airborne, builds shadow primitive, draws via 800758f8
 0x80069aa8 func obj_PrepareScaleAndDraw hand computes scaled extents 0xd4-0xdc from scale and params 0x30, rotates screen offset, calls 80038f18 or custom draw callback
-0x80069c6c func chr_ClearStaleLinks hand clears grabber 0x16c if dead or state above 1, keeps target 0x1a8 only in modes 0x27 or 0x24
+0x80069c6c func char_ClearStaleLinks hand clears grabber 0x16c if dead or state above 1, keeps target 0x1a8 only in modes 0x27 or 0x24
 0x80069d04 func obj_UpdateFixedStepSimple hand lifecycle 0..3 with fixed 0x100 step accumulator vs DAT_800e774e calling callbacks 0x10 and 0x14
-0x80069e6c func chr_UpdateLifecycleFixedStep hand lifecycle 0..3, frees slot in char table, runs per-step callback 0x1c0 table, then draw 80069aa8 and shadow
+0x80069e6c func char_UpdateLifecycleFixedStep hand lifecycle 0..3, frees slot in char table, runs per-step callback 0x1c0 table, then draw 80069aa8 and shadow
 0x8006a154 func obj_UpdateLifecycleFixedStep hand lifecycle 0..3 with 0x100 step loop calling 0x138 callback, counter 0xa6, then draw callback 0x13c and shadow
 0x8006a370 func obj_DrawModelTwoPassBlend hand scales 0xc4/0xc8 by params 0x30, draws with 800758f8 once or twice with blend modes 0x4020, 0x4040 for glow
 0x8006a4b4 func obj_UpdateScreenSpriteProjection hand sets mode bits 0xba, projects world pos via 800386ac, scales via 8004c434, offsets by 0xa0,0x78 screen center
-0x8006a638 func chr_UpdateLifecycleScaled hand lifecycle 0..3 computing scale 0x7e-0x82 from base 0x84-0x88 times 0x7c, fixed-step callbacks, frees slot, shadow
+0x8006a638 func char_UpdateLifecycleScaled hand lifecycle 0..3 computing scale 0x7e-0x82 from base 0x84-0x88 times 0x7c, fixed-step callbacks, frees slot, shadow
 0x8006a9a4 func obj_UpdateLifecycleScaled hand lifecycle 0..3 computing scale 0x7e-0x82 from 0x84-0x88 times 0x7c, 0x100 step loop, optional shadow 800692d4
 0x8006ac34 func fx_DrawWorldMarkerSprite hand project pos 0x26,0x2a,0x2e via 800386ac, cull outside screen 0xe0 by 0xb8, draws from table DAT_800d351c entry size 0x1c
-0x8006af04 func fx_DrawScreenEdgeMarker hand provisional marker clamped to screen edge using wobble from DAT_800d43da and table DAT_800d351c, draws with 0x1c entry
-0x8006b1ac func chr_UpdateMotionFrictionGravity hand ground friction toward zero by params 0x28, gravity from params 0x14 when airborne, scratchpad vectors, ground clamp
-0x8006b69c func chr_StartHitKnockback hand sets mode 0x30, knockback velocity from attacker 0x168 velocity scaled by weight ratio of params 0x24 and 0x18
-0x8006b8c0 func chr_StartGrabbedByOpponent hand needs grabber 0x16c, sets mode 0x24, state 0x41, sound 0x17, hit box, picks direction bits from grabber pad 0x1bc
-0x8006bae8 func chr_StartThrownByGrabber hand sound 0x67, clears motion, gravity from params 0x14, launch velocity from grabber pad direction 0xf0 bits, copies team
-0x8006bea0 func chr_ApplyRandomKnockbackVelocity hand rotates current velocity by random yaw 0x400 and pitch 0x380+rand via 80066d40 and 80066f68
-0x8006bfac func chr_LaunchTowardTarget hand aims velocity at target 0x1a8 with speed param_2, clamps distance 0x1e..300, stores yaw 0x199 pitch 0x19a, adds lift
-0x8006c14c func chr_ApplyWeightedKnockback hand random pitch and yaw, knockback scaled by weight difference of params 0x24 versus attacker 0x168, rotates via 80066f68
-0x8006c298 func chr_StartCatchSwapLink hand clears motion, swaps grabber 0x16c and target 0x1a8, copies attacker params 0x134/0x14d, faces target via 80066d40
-0x8006c490 func chr_StartKnockedByThrow hand applies random knockback velocity, timer 0xa6 to 1, mode 0x30, copies team from thrower 0x168, pad bits 8
-0x8006c4e0 func chr_DispatchQueuedAction_2 hand switch on queued action byte 0x198: 0x1d catch swap, 0x18-0x1c knock, 0x1e grabbed, 0x1f thrown, default hit knockback; clears it
-0x8006c5a4 func chr_CheckGrabberReleased hand clamps health 0x184 at zero, clears motion and sets mode 0x30 when grabber 0x16c gone, dead or state out of range
-0x8006c634 func chr_UpdateKnockedMotion hand knocked motion: weighted knockback, ground friction using params 0x24, integrates position by velocity, flag 0x1cf set
+0x8006af04 func fx_DrawScreenEdgeMarker hand marker clamped to screen edge using wobble from DAT_800d43da and table DAT_800d351c, draws with 0x1c entry
+0x8006b1ac func char_UpdateMotionFrictionGravity hand ground friction toward zero by params 0x28, gravity from params 0x14 when airborne, scratchpad vectors, ground clamp
+0x8006b69c func char_StartHitKnockback hand sets mode 0x30, knockback velocity from attacker 0x168 velocity scaled by weight ratio of params 0x24 and 0x18
+0x8006b8c0 func char_StartGrabbedByOpponent hand needs grabber 0x16c, sets mode 0x24, state 0x41, sound 0x17, hit box, picks direction bits from grabber pad 0x1bc
+0x8006bae8 func char_StartThrownByGrabber hand sound 0x67, clears motion, gravity from params 0x14, launch velocity from grabber pad direction 0xf0 bits, copies team
+0x8006bea0 func char_ApplyRandomKnockbackVelocity hand rotates current velocity by random yaw 0x400 and pitch 0x380+rand via 80066d40 and 80066f68
+0x8006bfac func char_LaunchTowardTarget hand aims velocity at target 0x1a8 with speed param_2, clamps distance 0x1e..300, stores yaw 0x199 pitch 0x19a, adds lift
+0x8006c14c func char_ApplyWeightedKnockback hand random pitch and yaw, knockback scaled by weight difference of params 0x24 versus attacker 0x168, rotates via 80066f68
+0x8006c298 func char_StartCatchSwapLink hand clears motion, swaps grabber 0x16c and target 0x1a8, copies attacker params 0x134/0x14d, faces target via 80066d40
+0x8006c490 func char_StartKnockedByThrow hand applies random knockback velocity, timer 0xa6 to 1, mode 0x30, copies team from thrower 0x168, pad bits 8
+0x8006c4e0 func char_DispatchQueuedAction_2 hand switch on queued action byte 0x198: 0x1d catch swap, 0x18-0x1c knock, 0x1e grabbed, 0x1f thrown, default hit knockback; clears it
+0x8006c5a4 func char_CheckGrabberReleased hand clamps health 0x184 at zero, clears motion and sets mode 0x30 when grabber 0x16c gone, dead or state out of range
+0x8006c634 func char_UpdateKnockedMotion hand knocked motion: weighted knockback, ground friction using params 0x24, integrates position by velocity, flag 0x1cf set
 0x8006c908 func cam_RequestFocusTarget hand camera object PTR_PTR_800e8f70: stores target if slot empty or priority higher, returns priority or minus one
 0x8006c96c func cam_ResetFocusAngle hand snaps camera yaw 0x46 to nearest 0x300 or 0x380 step per mode DAT_800aecf8 0x200, clears focus target and priority
 0x8006ca6c func cam_SmoothAnglesClampTargets hand clamps tracked points to arena bounds DAT_800e79bc-d0, eases camera pitch 0x44 toward -0x38 and yaw 0x46 toward DAT_800e7fdc
 0x8006cc20 func gfx_DrawRotatedScreenQuad hand builds four corner points 0x80000 scaled, rotates 80066a04 around center 0xa0,0x78, draws quad via 8003ce18
-0x8006ce00 func cam_UpdateEventSequence hand provisional camera event state machine by byte 0x4c, counts frames 0x54, sets pause bit 0x40 DAT_800e7751, sound 0x7d
+0x8006ce00 func cam_UpdateEventSequence hand camera event state machine by byte 0x4c, counts frames 0x54, sets pause bit 0x40 DAT_800e7751, sound 0x7d
 0x8006d1fc func cam_StartEventKind1 hand starts camera event kind 1 for object when none active or priority ok, random byte 0x4e from 8006679c(0x18)
 0x8006d2ac func cam_StartEventKind2 hand starts camera event kind 2 for object if DAT_800e7978 clear and object not flagged 0x10, random byte 0x4e
 0x8006d354 func cam_ComputeFramingBounds hand loops tracked points rotated by camera yaw, finds min and max extents of fighters, stores DAT_800e7980.. framing box
@@ -704,7 +704,7 @@
 0x8006e4d8 func cam_ResetState hand zeroes camera object fields 0x14-0x54, sets pitch 0xffc8, distance 0x300000, clears DAT_800e7994.. globals and DAT_800e7fe6
 0x8006e5f0 func cam_Create hand allocs 0x78 task updater cam_UpdateMain, sets flag 0x80, stores in PTR_PTR_800e8f70, then cam_ResetState
 0x8006e64c func fx_UpdateShrinkFadeChild hand child effect: init lifetime 0x3c from parent 0x140, grows scale 0x7c, fades colours 0xce-0xd0 by 1/16, state 2 at end
-0x8006e7cc func fx_UpdateGlowPulseByState hand provisional per-state (0x1bc 2,3) colour pulse via 8004995c scaled by timer 0x48, eases scale 0x7c toward 0x9a
+0x8006e7cc func fx_UpdateGlowPulseByState hand per-state (0x1bc 2,3) colour pulse via 8004995c scaled by timer 0x48, eases scale 0x7c toward 0x9a
 0x8006ee20 func fx_DrawSpinningRing hand draws main sprite, builds extra 0x7c-byte primitive copy with rotation 0x8a<<4 and scale 0x48, draws via 80038f18 twice
 0x8006f038 func fx_InitRingParams hand calls fx_InitSpriteTrailBody, sets param ptr DAT_800a6a08 and 8 half-size shorts at 0x1e6.. from params 0x20 and 0x22
 0x8006f128 func fx_DrawSpinningRingMirrored hand like ring draw but draws third pass with negated Y scale 0x20, rotation 0x8a<<4 and reverse spin
@@ -712,11 +712,11 @@
 0x8006f54c func fx_UpdateRandomShardChild hand first tick randomises spin, drift and rotation fields 0x10c-0x120 with 80066748, colour red 0xff, then moves
 0x8006f91c func fx_DrawTintedSpriteCallback hand calls 8003c888 on sub-struct 0xec with colour bytes 0xce-0xd0 and mode nibble from 0xba
 0x8006f95c func fx_DrawSpriteWithCountdownBar hand draws sprite at rotated screen offset via 80038f18, then countdown bar sprite 0x9f minus scaled timer 0x9a when pad 0x1be set
-0x8006fb5c func chr_UpdateBreakableFxState hand provisional state routine: queues state 10 on flags 0x19c, every 3rd tick spawns child 8006a9a4 sprite with callbacks 8006f54c, 8006f91c
-0x800706fc func chr_SpawnInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, stores in char table by slot, sprite 0x52, team and index set to slot
+0x8006fb5c func char_UpdateBreakableFxState hand provisional state routine: queues state 10 on flags 0x19c, every 3rd tick spawns child 8006a9a4 sprite with callbacks 8006f54c, 8006f91c
+0x800706fc func char_SpawnInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, stores in char table by slot, sprite 0x52, team and index set to slot
 0x800707dc func fx_UpdateEaseScaleFadeOut hand eases scale 0x7c toward 0xa0 by 1/6, after 0x2c frames fades colours 1/16, frees at 0x77 frames
-0x80070940 func fx_UpdateDeathPoofState hand provisional state routine by 0x1bc; state 2 first tick sound 0x12, resets scale 0x100, clears vertex shorts, ring params via 8004995c
-0x80070ebc func chr_SpawnPropInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x51, params DAT_800a6adc, zero hit values, slot team set
+0x80070940 func fx_UpdateDeathPoofState hand state routine by 0x1bc; state 2 first tick sound 0x12, resets scale 0x100, clears vertex shorts, ring params via 8004995c
+0x80070ebc func char_SpawnPropInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x51, params DAT_800a6adc, zero hit values, slot team set
 0x80070f94 func eftmat_InitTables hand clears 0x2b entry tables, 16 texture page grids, sets slots 0xff, then 8008ab10 and 8008d7f4 with DAT_800a6b40
 0x80071138 func eftmat_AllocTextureSlot hand finds free cache slot of 12, packs up to 5 sprite sheets into VRAM page grid cells, returns slot or minus one
 0x8007158c func eftmat_FreeTextureSlot hand frees cache slot for set param_1: resets per-frame entries to 0xff, releases page cells and marks slot 0xff
@@ -737,30 +737,30 @@
 0x800753f4 func spr_DrawSpriteTriangle hand sprite types 4 and 5: loads frame, builds POLY_FT3 (code 0x24, len 7) triangle primitive with screen offsets in OT buffer
 0x800758f8 func spr_DrawSprite hand dispatches by type byte 0x14: 0 transformed, 1 quad, 3 multipart, 4/5 triangle; reports string SPR NO OVER ERROR on bad frame
 0x80075a18 func spr_InitDefaults hand resets sprite struct: frame zero, scale 0x1000, colour 0x80, alpha 0xff, extent 0x10000
-0x80075b20 func chr_SpawnNeutralInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x24, params DAT_800a6d24, team 0x18 neutral
+0x80075b20 func char_SpawnNeutralInSlot hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x24, params DAT_800a6d24, team 0x18 neutral
 0x80075bcc func cam_UpdateYawToFocus hand turns camera yaw 0x46 toward angle to focus target by up to 0x10 when mode '*', frames bounds 8006d354, resets focus
 0x80075cd8 func cam_UpdatePitchByFraming hand adjusts camera pitch 0x44 toward -0x5a based on framing depth DAT_800e7984, then framing and focus reset
-0x80075db0 func chr_DispatchQueuedActionTimed hand switch on queued action 0x198 using state timer 0x13c thresholds 0x2fff and 0x3000, catch swap or knock, sound 0x7e
-0x80076070 func chr_UpdateSpinRecoverToTarget hand eases facing 0x8c/0x8e toward target angles at 0x38/0x3a with step limited by 0x92, flags 0x1bf, returns mode 0x30
-0x800762bc func chr_UpdateSpinRecoverToTargetWide hand like spin recover with 0xff threshold, tweens by 0x92>>1, ends mode 0x30 on contact or timer
-0x800764f8 func chr_SetupArcedLeap hand first tick computes arc angle toward target 0x28-0x30, speed 0x80000, stores 0x92/0x94 step and 0x34 range, hitbox 300
-0x80076778 func chr_UpdateModeStateMachine hand big switch on mode byte 0xb0 (case 0x23..) using scratchpad, sound 0x10 on hit flag; shared mode update for fighters
+0x80075db0 func char_DispatchQueuedActionTimed hand switch on queued action 0x198 using state timer 0x13c thresholds 0x2fff and 0x3000, catch swap or knock, sound 0x7e
+0x80076070 func char_UpdateSpinRecoverToTarget hand eases facing 0x8c/0x8e toward target angles at 0x38/0x3a with step limited by 0x92, flags 0x1bf, returns mode 0x30
+0x800762bc func char_UpdateSpinRecoverToTargetWide hand like spin recover with 0xff threshold, tweens by 0x92>>1, ends mode 0x30 on contact or timer
+0x800764f8 func char_SetupArcedLeap hand first tick computes arc angle toward target 0x28-0x30, speed 0x80000, stores 0x92/0x94 step and 0x34 range, hitbox 300
+0x80076778 func char_UpdateModeStateMachine hand big switch on mode byte 0xb0 (case 0x23..) using scratchpad, sound 0x10 on hit flag; shared mode update for fighters
 0x8007740c func ui_DrawOffscreenPointerArrow hand if screen pos 0xbc/0xbe is beyond 0xb0 by 0x88, points arrow sprite 0x59 using atan2 80049a18, clamped to border, draws 800758f8
-0x80077928 func chr_SpawnHeavyBodyInSlot hand allocs 0x220 object updater 8006a638 (scaled), sprite 0xbe, flag 4, health 0x7000, team slot, shadow flag
+0x80077928 func char_SpawnHeavyBodyInSlot hand allocs 0x220 object updater 8006a638 (scaled), sprite 0xbe, flag 4, health 0x7000, team slot, shadow flag
 0x80077a34 func fx_UpdateSmokeFollowOwner hand child puff follows owner 0x140, releases when owner dies using owner angles, fades colour 0xce by step, timers 0x92/0x94
 0x80077d18 func fx_UpdateTrailAttachedToOwner hand copies pos and angles from owner 0x1c4, eases speed 0x38 to 0x4800000, every 10 ticks spawns trail child via 8003a658 updater 8006a9a4
 0x80077fd8 func fx_DrawLayeredGlowSprites hand copies sprite struct into scratchpad, builds 0x5c/0x5d glow layers with colour and scale rings, draws repeatedly via 80038f18
-0x800783a0 func chr_SpawnAttachedHitbox hand allocs 0x220 object updater 80069e6c, params DAT_800a6df0, parent stored at 0x1c4, team copied from param_1, small hit values
+0x800783a0 func char_SpawnAttachedHitbox hand allocs 0x220 object updater 80069e6c, params DAT_800a6df0, parent stored at 0x1c4, team copied from param_1, small hit values
 0x80078474 func fx_UpdateGrowThenShrink hand state machine: grows scale 0x7c toward 0x140, then shrinks by 0x10 to zero, gravity values, frees when parent 0x140 dies
-0x80078660 func chr_UpdateKnockedFlyingMode hand provisional mode update for fighter: out-of-arena bounds check sets mode 0x30 and state 9, mode 0x27 aims at target with 80066d40
-0x80078fec func chr_SpawnPropInSlotB hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x61, params DAT_800a6e28, health 1, slot team
+0x80078660 func char_UpdateKnockedFlyingMode hand mode update for fighter: out-of-arena bounds check sets mode 0x30 and state 9, mode 0x27 aims at target with 80066d40
+0x80078fec func char_SpawnPropInSlotB hand allocs 0x220 object updater 80069e6c, inits via 80067d04, sprite 0x61, params DAT_800a6e28, health 1, slot team
 0x800790c4 func fx_UpdateSparkleCluster hand per-step counter 0x98, random sparkle offsets via 80049978 modulo 3, colours 0xcd,0xd0, up to 4 sub-sprites in scratchpad
 0x800794ac func fx_UpdateGrowHoldShrinkSound hand state machine: scale 0x7c grows to 0x100 over 0x1e0 frames, sound 0x77 via 80045168 and 800451ec, shrinks to zero then frees
 0x80079774 func proj_SetupLobTowardTarget hand first tick: velocity toward 0x28-0x30 at speed 0x38 via 80066d40, 80066f68, vertical lift 0x1000000 over flight time, then adds gravity 0x34
 0x800798c4 func proj_SetupHighLobTowardTarget hand first tick: like 80079774 but double lift 0x2000000, velocity toward 0x28-0x30 via 80066d40/80066f68, then adds gravity 0x34 each tick
 0x80079a14 func proj_SetupTumbleArcToTarget hand first tick: aim at target, pitch via 80066c58, flight time from 0x3243f multiply, tilts angle 0x8c each step while timer 0x92 runs
-0x80079b90 func chr_UpdateModeStateMachineC hand scratchpad frame; mode 0x30 on hurt flags, modes 0x25/0x27 spawn puff 8006a9a4 every 8 ticks with updater 80078474, big mode switch
-0x8007a458 func chr_SpawnPlayerInSlotC hand allocs 0x220 object updater 80069e6c, 80067d04 init, stores in char table PTR_PTR_800e7760[slot], params DAT_800a6e6c, health 1, team slot
+0x80079b90 func char_UpdateModeStateMachineC hand scratchpad frame; mode 0x30 on hurt flags, modes 0x25/0x27 spawn puff 8006a9a4 every 8 ticks with updater 80078474, big mode switch
+0x8007a458 func char_SpawnPlayerInSlotC hand allocs 0x220 object updater 80069e6c, 80067d04 init, stores in char table PTR_PTR_800e7760[slot], params DAT_800a6e6c, health 1, team slot
 0x8007a534 func fx_UpdateDebrisBounce hand scratchpad collision probe 8003b674 at pos and prev pos; on hit flags 0x70-0x74, grounded sets state 2, integrates velocity into position
 0x8007a83c func fx_SpawnDebrisPuffBurst hand every 4th tick spawns puff via 8003a658 updater 8006a9a4, random velocity 80066748, rotates by owner angles 0xcc/0xce, updater 8007a534
 0x8007a990 func fx_UpdateEyeLookFollowAngles hand first tick resets velocity, sets 0x92 timer 0x5a; eases angles 0xcc/0xce toward parent scratch angles via 80066c58, speed ease 800666ec
@@ -768,20 +768,20 @@
 0x8007ac88 func fx_UpdateFollowerGrowShrink hand follows owner 0x140 position; state 0 init scale, 1 grows, 2 shrinks by 8 steps to zero, 3 sets lifecycle 2 to free
 0x8007ae38 func fx_DrawRotatedQuadTile hand sets GTE translation 8004e2a4 from pos, rotates 4 corners with 80066a04 using table DAT_800a6ef8 scaled by 0x7c, builds vertices, loops 0xb4 tiles
 0x8007b05c func fx_UpdateEyeLookTimedSpin hand first tick timer 0x92 =300, mode 0x1bf; state 1 eases angles 0xcc/0xce toward parent, masks 0xfff, wraps small speed check
-0x8007b3e8 func chr_UpdateAttackAimAndFire hand big update: clears target if dead, builds muzzle offset from params 0x1c/0x20 rotated by angles, tests weapon states, fires projectiles, loops 4 slots
-0x8007c14c func chr_SpawnPlayerInSlotD hand allocs 0x220 object updater 80069e6c, char table slot, params DAT_800a6ec0, angle 0xcc=0xfc00, flags 0xc2 |= 0xc00, health 0
+0x8007b3e8 func char_UpdateAttackAimAndFire hand big update: clears target if dead, builds muzzle offset from params 0x1c/0x20 rotated by angles, tests weapon states, fires projectiles, loops 4 slots
+0x8007c14c func char_SpawnPlayerInSlotD hand allocs 0x220 object updater 80069e6c, char table slot, params DAT_800a6ec0, angle 0xcc=0xfc00, flags 0xc2 |= 0xc00, health 0
 0x8007c2c4 func ui_DrawHealthBarSprites hand draws pencil health bar for slot 0x38 via sprite struct in locals and 800758f8 in a loop, colours from 0x2e-0x34, skips if DAT_800d3520 is 2
 0x8007ca94 func fx_UpdateBurstSprite hand state machine sprite 0xd5: init from 0xbc/0xbe screen pos, state 2 integrates velocity with accel 0x28/0x2c over timer 0x92, then frees
 0x8007cc30 func fx_DrawSpriteAtScreenPos hand copies angles 0x12/0x16 into sprite fields 0xbc/0xbe, scale 0x1000, rotation 0x8a<<2, draws via 800758f8 at +0xb8
 0x8007cc8c func fx_UpdateDriftSprite hand state machine sprite 0xcd: random drift velocity 0x28/0x2c by facing bit, timer 0x3c plus random 5, then frees
 0x8007ce08 func ui_UpdateHealthBar hand copies health 0x184/0x186, colour, team and slot from tracked char 0x1c each tick, drops link if dead, countdown 0x3d, state machine 0x20
 0x8007d34c func ui_SpawnHealthBar hand allocs 0x44 task updater 80069d04, 80067cd8 init, hooks update 8007ce08 and draw 8007c2c4, copies colour team slot health from char
-0x8007d43c func chr_UpdateModeStateMachineD hand hurt flags set mode 0x30 state 9; mode 0x27 copies pos into scratchpad and runs special motion, integrates velocity into position
-0x8007d5ac func chr_InitSmallDamageParams hand provisional fragment using unaff_s2: sets damage fields 0x158/0x15a, 0x15e..0x162 small values, copies params pos 0x14 into 0x2c
-0x8007d60c func chr_InitScaledDamageParams hand provisional fragment: damage from fixed multiply with scale 0x7c<<8, sets 0x15e..0x165 attack params, copies params 0x14 into 0x2c
-0x8007e0b0 func chr_InheritThrowerVelocity hand sets mode 0x30, adds thrower 0x168 velocity scaled by mass ratio of params 0x24 clamped to 0x10000 to this object, copies team and damage
-0x8007e314 func chr_DispatchQueuedAction_3 hand switch on queued action 0x198: 0x18-0x1d pickup via 8006c490 or 8006c298, 0x1e 8006b8c0, 0x1f 8006bae8, default 8007e0b0; clears 0x198
-0x8007e3d8 func chr_SpawnItemByType hand allocs 0x220 object updater 80069e6c, char table slot, scale random 0x100+, three types param_2 0/1/2 pick params DAT_800a6fb0/6fe8/7020
+0x8007d43c func char_UpdateModeStateMachineD hand hurt flags set mode 0x30 state 9; mode 0x27 copies pos into scratchpad and runs special motion, integrates velocity into position
+0x8007d5ac func char_InitSmallDamageParams hand fragment using unaff_s2: sets damage fields 0x158/0x15a, 0x15e..0x162 small values, copies params pos 0x14 into 0x2c
+0x8007d60c func char_InitScaledDamageParams hand fragment: damage from fixed multiply with scale 0x7c<<8, sets 0x15e..0x165 attack params, copies params 0x14 into 0x2c
+0x8007e0b0 func char_InheritThrowerVelocity hand sets mode 0x30, adds thrower 0x168 velocity scaled by mass ratio of params 0x24 clamped to 0x10000 to this object, copies team and damage
+0x8007e314 func char_DispatchQueuedAction_3 hand switch on queued action 0x198: 0x18-0x1d pickup via 8006c490 or 8006c298, 0x1e 8006b8c0, 0x1f 8006bae8, default 8007e0b0; clears 0x198
+0x8007e3d8 func char_SpawnItemByType hand allocs 0x220 object updater 80069e6c, char table slot, scale random 0x100+, three types param_2 0/1/2 pick params DAT_800a6fb0/6fe8/7020
 0x8007e634 func game_ResetObjectTables hand calls 8007f658, 8003a86c, 80043960, 8003a924, zeroes char table 0x40 and table DAT_800e7860 0x20, clears flags, calls 8006e4d8, 800846d8, 80081f7c
 0x8007e710 func match_ResetKeepingSlotFlags hand if match flag 0x38 bit0 clear and start button pressed via 8003e244, saves 8 slot bytes, calls game_ResetObjectTables 8007e634, restores them
 0x8007e82c func stub_8007e82c hand tiny getter returns whether DAT_800aec4c is zero
@@ -836,10 +836,10 @@
 0x80081854 func memcard_CheckCreateFile hand opens with create flag 0x10200 then deletes and closes; tests card can create file
 0x800818f4 func memcard_CreateAndWriteSave hand creates file, writes 0x600-byte save block with checksums at +0x5f8/+0x5fc, FileWrite
 0x80081a34 func memcard_WriteSave hand opens existing card file, stamps checksums, writes 0x600 bytes, returns error codes
-0x80081b2c func memcard_FormatSlotChannel hand provisional shifts slot index by 4 and calls card channel helper
+0x80081b2c func memcard_FormatSlotChannel hand shifts slot index by 4 and calls card channel helper
 0x80081b4c func pad_SetAllActuators hand loops 4 ports calling PadSetAct-style helper with 6-byte tables at 800f2758
 0x80081bc4 func pad_ClearActuator hand zeroes 6-byte actuator table entry and sends to pad lib
-0x80081c30 func pad_SetMainModeIfDualShock hand provisional checks pad type 6 then sets pad mode table
+0x80081c30 func pad_SetMainModeIfDualShock hand checks pad type 6 then sets pad mode table
 0x80081c70 func pad_UpdateRumbleDecay hand rumble effect decay step writing motor bytes into actuator entry
 0x80081df4 func pad_RumbleTaskUpdate hand per-player loop calls rumble effect handlers from pointer table 800a72bc
 0x80081f7c func pad_ClearRumbleState hand zeroes actuator buffer and marks four rumble slots inactive 0xff
@@ -847,14 +847,14 @@
 0x80082064 func pad_StartRumble hand starts rumble effect for player by priority and duration if pad connected
 0x80082264 func fx_UpdateDebrisPiece hand moves debris with velocity and drag, spin, lifetime countdown then kill
 0x80082424 func fx_SpawnDebrisPieces hand spawns debris objects from model triangles, centers verts, random lifetime
-0x800826d0 func obj_UpdateBreakableState hand provisional state machine on +0x1bc init, break at flag 0x40, spawns debris, ends
-0x80082b5c func obj_UpdateFallingState hand provisional uses scratchpad stack, init state then eases height toward target
-0x80082fc0 func fx_UpdateScriptedEffect hand provisional switch on state spawns child object, offsets position by scratchpad vector
+0x800826d0 func obj_UpdateBreakableState hand state machine on +0x1bc init, break at flag 0x40, spawns debris, ends
+0x80082b5c func obj_UpdateFallingState hand uses scratchpad stack, init state then eases height toward target
+0x80082fc0 func fx_UpdateScriptedEffect hand switch on state spawns child object, offsets position by scratchpad vector
 0x80083440 func fx_CreateScriptedEffect hand allocates effect object at x,y,z<<16 with update fx_UpdateScriptedEffect
 0x800834ec func fx_DrawProjectedFlashQuads hand projects point, screen-clips 320x240, builds four sprite entries, submits draw
 0x800836a4 func fx_UpdateFlashFade hand 20-frame fade of three color bytes toward zero then dies
 0x80083780 func fx_CreateColorFlash hand allocates flash object, selects position/color by mode switch, 4 quads
-0x800839c8 func obj_UpdateEmitterState hand provisional large per-object update using scratchpad stack; copies params, spawns child sprites
+0x800839c8 func obj_UpdateEmitterState hand large per-object update using scratchpad stack; copies params, spawns child sprites
 0x80083f98 func obj_IntegrateMotionDrag hand adds velocity via vector rotate, applies drag/accel, spin, countdown kill at +0xa2
 0x80084220 func obj_InitEmitterDefaults hand resets object fields to defaults sets update func 800839c8, timers 60
 0x800842a0 func camera_UpdateFollowTask hand steps camera position toward target per mode with fixed 0x100 substeps, writes DAT_800d35e0-8
@@ -1044,39 +1044,39 @@
 0x8008db14 func SetSprt8 hand sets len 3 and code 0x74 textured 8x8 sprite
 0x8008db34 func SetTile hand sets len 3 and code 0x60 flat tile
 0x8008db54 func SetDrawMode hand builds E1 draw mode word and optional E2 texture window packet
-0x8008dbf4 func gs_InitGraph hand provisional init screen: display setup, identity geometry state, offset and clip updates
-0x8008dc68 func gs_InitDispEnvs hand provisional resets draw/disp env globals, pal check adds y offset 0x18
-0x8008dd84 func gs_SetResolution hand provisional stores screen size and flags then reinitialises geometry state
-0x8008ddec func gs_InitGeomState hand provisional stores screen w/h and resets view matrices to identity 0x1000
-0x8008e014 func gs_FillBgPacket hand provisional writes color, xy, wh into packet at current buffer index and AddPrim
-0x8008e154 func gs_ApplyScreenOffset hand provisional adds draw offsets to screen center and sets GTE offset
-0x8008e264 func gs_UpdateDrawArea hand provisional copies clip size and offsets into draw env then calls env setter
-0x8008e2e4 func gs_InitViewObj hand provisional copies current view matrix block into object, links parent by level
-0x8008e380 func gs_SetViewMatrix hand provisional calls two matrix helper functions with arg
-0x8008e3ac func gs_MulViewLocal hand provisional copies local matrix, multiplies with view then loads to GTE
-0x8008e440 func gs_ApplyRotMatrix hand provisional multiplies view matrix with arg and loads result to GTE
-0x8008e470 func gs_MulCoord hand provisional multiplies rotation matrices and adds translation vectors of both
-0x8008e500 func gs_MulCoordTrans hand provisional rotates translation by matrix and multiplies matrices into param_2
-0x8008e580 func gs_MulCoordInPlace hand provisional rotates translation and multiplies matrix in place for param_1
+0x8008dbf4 func gs_InitGraph hand init screen: display setup, identity geometry state, offset and clip updates
+0x8008dc68 func gs_InitDispEnvs hand resets draw/disp env globals, pal check adds y offset 0x18
+0x8008dd84 func gs_SetResolution hand stores screen size and flags then reinitialises geometry state
+0x8008ddec func gs_InitGeomState hand stores screen w/h and resets view matrices to identity 0x1000
+0x8008e014 func gs_FillBgPacket hand writes color, xy, wh into packet at current buffer index and AddPrim
+0x8008e154 func gs_ApplyScreenOffset hand adds draw offsets to screen center and sets GTE offset
+0x8008e264 func gs_UpdateDrawArea hand copies clip size and offsets into draw env then calls env setter
+0x8008e2e4 func gs_InitViewObj hand copies current view matrix block into object, links parent by level
+0x8008e380 func gs_SetViewMatrix hand calls two matrix helper functions with arg
+0x8008e3ac func gs_MulViewLocal hand copies local matrix, multiplies with view then loads to GTE
+0x8008e440 func gs_ApplyRotMatrix hand multiplies view matrix with arg and loads result to GTE
+0x8008e470 func gs_MulCoord hand multiplies rotation matrices and adds translation vectors of both
+0x8008e500 func gs_MulCoordTrans hand rotates translation by matrix and multiplies matrices into param_2
+0x8008e580 func gs_MulCoordInPlace hand rotates translation and multiplies matrix in place for param_1
 0x8008e600 func gs_PrintMatrix hand prints 3x3 short matrix using format (%d %d %d) three times
 0x8008e670 func gs_PrintVector hand prints translation vector at +0x14 with format (%d %d %d)
 0x8008e6a4 func gs_SetClipRect hand sets screen clip rect globals unless interlace, then updates area and offset
 0x8008e744 func gs_SetScreenCenter hand sets offset to half screen width/height and default depth range values
-0x8008e7c4 func gs_CallViewUpdate hand provisional thin wrapper calling one view function
-0x8008e7e4 func gs_RotateAlongVector hand provisional long routine: squared length, sqrt, builds rotation matrix from vector and angle, loads light matrix
+0x8008e7c4 func gs_SetGeomScreen hand thin wrapper calling one view function (was gs_CallViewUpdate)
+0x8008e7e4 func gs_SetLightVector hand long routine: squared length, sqrt, builds rotation matrix from vector and angle, loads light matrix (was gs_RotateAlongVector)
 0x8008ec9c func gs_SetLightMatrix hand copies 8-word matrix into light globals then loads to GTE
 0x8008ed00 func gs_GetLightMatrix hand copies light matrix globals out to 8-word buffer
 0x8008ed54 func gs_SetLightMode hand sets light mode 0-3 else prints not supported light mode
 0x8008edd4 func gs_SetBackColor hand shifts rgb right 4 and calls back-color setter
 0x8008ee04 func gs_ResetGeomState hand InitGeom then far color and offset zeroed, clears screen offset globals
-0x8008ee54 func tmd_ParseObject hand provisional copies TMD object header fields, two layouts by flag bit 3
-0x8008f014 func gs_SetCurrentTable hand provisional stores pointer into global table pointer
+0x8008ee54 func tmd_ParseObject hand copies TMD object header fields, two layouts by flag bit 3
+0x8008f014 func gs_SetCurrentTable hand stores pointer into global table pointer
 0x8008f024 func gs_SetRefView hand stores view matrix globals, optionally combines with reference coord, copies to active view
-0x8008f184 func gs_GetLw hand provisional walks coord parent chain with cache stamp, composes local-to-world matrix
-0x8008f444 func gs_GetLs hand provisional walks coord parent chain composing local-to-screen matrix
-0x8008f714 func gs_GetLws hand provisional walks coord parent chain composing both world and screen matrices
+0x8008f184 func gs_GetLw hand walks coord parent chain with cache stamp, composes local-to-world matrix
+0x8008f444 func gs_GetLs hand walks coord parent chain composing local-to-screen matrix
+0x8008f714 func gs_GetLws hand walks coord parent chain composing both world and screen matrices
 0x8008fa3c func InitGeom hand enables cop2 in Status, sets GTE H, ofx, ofy, zsf and dqa/dqb defaults
-0x8008fac4 func math_SqrtGte hand provisional integer sqrt via GTE leading-zero count and table lookup
+0x8008fac4 func math_SqrtGte hand integer sqrt via GTE leading-zero count and table lookup
 0x8008fb54 func MulMatrix0 hand loads rotation matrix to GTE and multiplies columns of second matrix with MVMVA
 0x8008fc64 func ApplyMatrixLV hand rotates 32-bit vector by matrix splitting into 15-bit halves, returns vector
 0x8008fdc4 func PushMatrix hand saves GTE rotation and translation to stack, errors when stack max full
@@ -1105,156 +1105,156 @@
 0x80090a74 func RotMatrix hand builds rotation matrix from three angles via sine cosine table
 0x80090d04 func RotMatrixYXZ hand builds rotation matrix from three angles using sine cosine table, Y X Z order
 0x80090f94 func RotMatrixZYX hand builds rotation matrix from three angles using sine cosine table, Z Y X order
-0x80091224 func math_RotMatrixGte hand provisional builds rotation matrix from three angles using table and 32 GTE ops
-0x80091424 func math_RotMatrixGte_2 hand provisional second variant building matrix from angles via GTE, different axis order
-0x80091634 func math_RotMatrixGte_3 hand provisional third variant building matrix from angles via GTE, different axis order
-0x80091834 func sys_PatchKernelHandler hand provisional compares then overwrites kernel exception handler words, FlushCache before and after
-0x80091924 func snd_SeqTick hand provisional per-frame sequence update iterating tracks and channels, dispatching flag bit handlers
-0x80091b94 func snd_SeqVolumeRamp hand provisional steps channel volume toward target with division, clamps 0-0x7f, updates spu volume
-0x80091da4 func snd_SeqKeyOffChannel hand provisional calls key-off for channel and clears active flag bit 2
-0x80091e44 func snd_SeqAdvanceWrap hand provisional thin wrapper sign-extending track and channel to advance function
-0x80091e74 func snd_SeqAdvanceDelta hand provisional counts down tick delta, runs event parser when due
-0x80091f70 func snd_SeqLoopOrEnd hand provisional on loop end counts repeats, rewinds to loop start or stops channel
-0x800921b4 func snd_SeqParseEvent hand provisional reads next sequence byte, handles note, running status, control and meta events
-0x80092564 func snd_SeqReadDelta hand provisional reads variable-length delta time bytes, scales to ticks, accumulates into channel position
-0x80092614 func snd_SeqStartChannel hand provisional resets channel state, clears flag bits, rewinds to start pointer, sets playing bit
-0x80092714 func snd_SeqSetActive hand provisional sets channel byte at +0x14 to 1 and clears flag bit 8
-0x80092774 func snd_InitSeqState hand provisional loads 16 spu volume regs 0x1f801d80, clears 32 by 16 word channel table, resets counters
-0x80092814 func snd_InitAll_2 hand provisional calls three sound init functions in a row
-0x80092884 func snd_SeqGetActive hand provisional returns channel byte at +0x14 for track and channel index
-0x800928c4 func snd_SeqOpen hand provisional finds free sequence slot bit, fills command handler table, string Can't Open Sequence data any more
-0x80092b54 func snd_CmdSetChannel hand provisional reads one byte into channel +0x26 then reads delta time
-0x80092bd4 func snd_CmdNoteOn hand provisional note on event: looks up tone, handles legato, sets velocity, keys voices
-0x80092f54 func snd_CmdSetVolume hand provisional stores volume at +0x60 and applies it with volume/pan update call
-0x80093024 func snd_CmdSetPan hand provisional stores pan at +0x27 and reapplies volume/pan for voice
-0x800930f4 func snd_CmdSetProgram hand provisional program change: sets tone then reapplies volume and pan
-0x800931e4 func snd_CmdSustain hand provisional value under 0x40 calls pedal-off function else pedal-on, then reads delta
+0x80091224 func math_RotMatrixGte hand builds rotation matrix from three angles using table and 32 GTE ops
+0x80091424 func math_RotMatrixGte_2 hand second variant building matrix from angles via GTE, different axis order (was math_RotMatrixGte_2)
+0x80091634 func math_RotMatrixGte_3 hand third variant building matrix from angles via GTE, different axis order
+0x80091834 func sys_PatchKernelHandler hand compares then overwrites kernel exception handler words, FlushCache before and after
+0x80091924 func snd_SeqTick hand per-frame sequence update iterating tracks and channels, dispatching flag bit handlers
+0x80091b94 func snd_SeqVolumeRamp hand steps channel volume toward target with division, clamps 0-0x7f, updates spu volume
+0x80091da4 func snd_SeqKeyOffChannel hand calls key-off for channel and clears active flag bit 2
+0x80091e44 func snd_SeqAdvanceWrap hand thin wrapper sign-extending track and channel to advance function
+0x80091e74 func snd_SeqAdvanceDelta hand counts down tick delta, runs event parser when due
+0x80091f70 func snd_SeqLoopOrEnd hand on loop end counts repeats, rewinds to loop start or stops channel
+0x800921b4 func snd_SeqParseEvent hand reads next sequence byte, handles note, running status, control and meta events
+0x80092564 func snd_SeqReadDelta hand reads variable-length delta time bytes, scales to ticks, accumulates into channel position
+0x80092614 func snd_SeqStartChannel hand resets channel state, clears flag bits, rewinds to start pointer, sets playing bit
+0x80092714 func snd_SeqSetActive hand sets channel byte at +0x14 to 1 and clears flag bit 8
+0x80092774 func snd_InitSeqState hand loads 16 spu volume regs 0x1f801d80, clears 32 by 16 word channel table, resets counters
+0x80092814 func snd_InitAll_2 hand calls three sound init functions in a row
+0x80092884 func snd_SeqGetActive hand returns channel byte at +0x14 for track and channel index
+0x800928c4 func snd_SeqOpen hand finds free sequence slot bit, fills command handler table, string Can't Open Sequence data any more
+0x80092b54 func snd_CmdSetChannel hand reads one byte into channel +0x26 then reads delta time
+0x80092bd4 func snd_CmdNoteOn hand note on event: looks up tone, handles legato, sets velocity, keys voices
+0x80092f54 func snd_CmdSetVolume hand stores volume at +0x60 and applies it with volume/pan update call
+0x80093024 func snd_CmdSetPan hand stores pan at +0x27 and reapplies volume/pan for voice
+0x800930f4 func snd_CmdSetProgram hand program change: sets tone then reapplies volume and pan
+0x800931e4 func snd_CmdSustain hand value under 0x40 calls pedal-off function else pedal-on, then reads delta
 0x80093294 func snd_CmdSetReverbDepth hand provisional passes value twice to reverb depth setter then reads delta
-0x80093324 func snd_CmdMarkerEvent hand provisional calls registered per-track callback for marker state 0x28, stores marker value and counts
-0x80093424 func snd_CmdLoopPoint hand provisional handles loop start 0x14 and loop end 0x1e with repeat counter, jumps back
-0x80093564 func snd_CmdSetParamA hand provisional stores byte at +0x18, increments counter at +0x1e, reads delta
-0x800935d4 func snd_CmdSetParamB hand provisional stores byte at +0x19, increments counter at +0x1e, reads delta
-0x80093644 func snd_CmdResetControllers hand provisional resets effects, sets default volume 0x7f, pan 0x40, params cleared
-0x80093704 func snd_CmdEffectA hand provisional fetches effect data, patches byte from stack then writes it back
-0x80093794 func snd_CmdEffectB hand provisional patches effect byte, if value 0 or 4 calls matching reverb reset function
-0x80093854 func snd_CmdEffectC hand provisional fetches effect data, patches byte at +0x12 from stack and writes back
-0x800938e4 func snd_SetAdsrField13 hand provisional fetches voice adsr data, patches stack byte at +0x13 and writes back
-0x80093974 func snd_SetAttackLinear hand provisional unpacks adsr, sets attack rate from stack with linear mode 0, repacks and writes
+0x80093324 func snd_CmdMarkerEvent hand calls registered per-track callback for marker state 0x28, stores marker value and counts
+0x80093424 func snd_CmdLoopPoint hand handles loop start 0x14 and loop end 0x1e with repeat counter, jumps back
+0x80093564 func snd_CmdSetParamA hand stores byte at +0x18, increments counter at +0x1e, reads delta
+0x800935d4 func snd_CmdSetParamB hand stores byte at +0x19, increments counter at +0x1e, reads delta
+0x80093644 func snd_CmdResetControllers hand resets effects, sets default volume 0x7f, pan 0x40, params cleared
+0x80093704 func snd_ModifyVagAttr hand fetches effect data, patches byte from stack then writes it back (was snd_CmdEffectA)
+0x80093794 func snd_CmdEffectB hand patches effect byte, if value 0 or 4 calls matching reverb reset function
+0x80093854 func snd_CmdEffectC hand fetches effect data, patches byte at +0x12 from stack and writes back
+0x800938e4 func snd_GetSetAdsrField13 hand fetches voice adsr data, patches stack byte at +0x13 and writes back (was snd_SetAdsrField13)
+0x80093974 func snd_SetAttackLinear hand unpacks adsr, sets attack rate from stack with linear mode 0, repacks and writes
 0x80093a24 func snd_UnpackAdsr hand unpacks two spu adsr halfwords into fields: attack, decay, sustain, release rates, modes and direction
 0x80093a80 func snd_PackAdsr hand packs adsr struct fields back into two spu halfwords
-0x80093b24 func snd_SetAttackExp hand provisional same as attack setter with exponential mode flag 1
-0x80093be4 func snd_SetDecayRate hand provisional unpacks adsr, sets decay rate field from stack byte, repacks
-0x80093c94 func snd_SetSustainLevel hand provisional unpacks adsr, sets sustain level field, repacks
-0x80093d44 func snd_SetSustainRate hand provisional unpacks adsr, sets sustain rate with mode flag 0, repacks
-0x80093df4 func snd_SetSustainRateExp hand provisional sets sustain rate with mode flag 1, repacks
-0x80093eb4 func snd_SetReleaseRate hand provisional sets release rate with mode flag 0, repacks adsr
-0x80093f64 func snd_SetReleaseRateExp hand provisional sets release rate with mode flag 1, repacks adsr
-0x80094014 func snd_SetSustainDirection hand provisional sets sustain direction flag from value ranges 1-0x3e or 0x40-0x7f, repacks
-0x800940f4 func snd_SetAdsrByte15 hand provisional patches stack byte at +0x15 then repacks adsr and writes voice data
-0x80094194 func snd_SetAdsrByte16 hand provisional patches stack byte at +0x16 then repacks adsr and writes voice data
-0x80094234 func snd_ApplyParamA hand provisional wrapper passing stack argument to function 800967b4
-0x80094264 func snd_ApplyReverbDepth hand provisional wrapper passing stack argument twice to reverb depth setter
-0x80094294 func snd_ApplyParamB hand provisional wrapper passing stack argument to function 80096864
-0x800942c4 func snd_ApplyParamC hand provisional wrapper passing stack argument to function 800966e4
-0x800942f4 func snd_ApplyParamC_2 hand provisional duplicate wrapper passing stack argument to function 800966e4
-0x80094324 func snd_CmdSetChannelParam hand provisional reads byte and calls channel parameter setter with tone index, then delta
-0x800943d4 func snd_CmdControlChange hand provisional dispatches controller numbers 0,6,7,10,11,0x40,99 etc to handlers via function table
-0x80094604 func snd_CmdSetTempo hand provisional reads 3-byte tempo, computes 60000000 divided, derives tick rate
-0x800947d4 func snd_CmdNoteOff hand provisional note off or velocity-zero note with mute mask check, calls key-off or key-on helpers
-0x800948b4 func snd_CmdProgramChange hand provisional stores program byte into channel tone table then reads delta
-0x80094924 func snd_SeqInitFromData hand provisional initialises channel state from SEQ header, strings not SEQ Data and old SEQ Data Format
-0x80094c74 func snd_SeqPlayDefault hand provisional wrapper calling sequence start for track 0 with mode and repeat
-0x80094cac func snd_SeqPlayWrap hand provisional wrapper sign-extending args to sequence start
-0x80094cf4 func snd_SeqPlayImpl hand provisional rewinds pointers, sets repeat count, mode 1 starts play and fade, mode 0 sets stop flag
-0x80094e14 func snd_SetSpuCommonVolSel hand provisional picks spu common attr mask 0x100/0x200/0x1000/0x2000 by two flags, sets volume, calls SpuSetCommonAttr-like
-0x80094ed4 func snd_SetMasterVolume hand provisional mask 3 left/right volumes scaled by 0x81 to spu common attr setter
-0x80094f24 func snd_SetCdVolume hand provisional scales 0-0x7f volumes to 0x7fff, mask 6, cd attribute setter
-0x80094f58 func snd_SetCdVolumeScaled hand provisional divides volumes by 64 using HI register, mask 6, cd attribute setter
-0x80094fb4 func snd_SeqStopReset hand provisional clears flags, key-off, resets all channel fields, defaults volume 0x7f, pan 0x40 for 16 channels
-0x80095134 func snd_SeqStopResetTrack0 hand provisional calls sequence stop reset for channel 0
-0x8009515c func snd_SeqStopResetWrap hand provisional wrapper sign-extending args to sequence stop reset
-0x80095194 func snd_SetReverbVolume hand provisional clamps volumes to 0x7f, scales by 0x102, masks 0xc0 or 0xc00, spu common attr call
-0x800952a4 func snd_SeqInitTable hand provisional lays out sequence channel tables of 0xb0 bytes each, marks unused slots, clears fields
-0x800954c4 func snd_SetTickRateMode hand provisional switches tick rate setting 0-5 by video mode, stores 0x3c/0xf0/0x78/0x32
-0x80095614 func snd_SetupTickCallback hand provisional installs tick timer mode with reload value by rate mode, reentry guarded
-0x80095844 func snd_SetupTickCallbackOn hand provisional calls tick callback setup with 1
-0x80095864 func snd_SetupTickCallbackOff hand provisional calls tick callback setup with 0
-0x80095884 func snd_TickCallback hand provisional calls optional hook then main sound tick function
-0x800958d0 func snd_TickToggle hand provisional alternates flag, every second call runs sound tick function
-0x800958d8 func snd_TickToggleTail hand provisional tail fragment of toggling tick handler using v0 flag
+0x80093b24 func snd_SetAttackExp hand same as attack setter with exponential mode flag 1
+0x80093be4 func snd_SetDecayRate hand unpacks adsr, sets decay rate field from stack byte, repacks
+0x80093c94 func snd_SetSustainLevel hand unpacks adsr, sets sustain level field, repacks
+0x80093d44 func snd_SetSustainRate hand unpacks adsr, sets sustain rate with mode flag 0, repacks
+0x80093df4 func snd_SetSustainRateExp hand sets sustain rate with mode flag 1, repacks
+0x80093eb4 func snd_SetReleaseRate hand sets release rate with mode flag 0, repacks adsr
+0x80093f64 func snd_SetReleaseRateExp hand sets release rate with mode flag 1, repacks adsr
+0x80094014 func snd_SetSustainDirection hand sets sustain direction flag from value ranges 1-0x3e or 0x40-0x7f, repacks
+0x800940f4 func snd_SetAdsrByte15 hand patches stack byte at +0x15 then repacks adsr and writes voice data
+0x80094194 func snd_SetAdsrByte16 hand patches stack byte at +0x16 then repacks adsr and writes voice data
+0x80094234 func snd_SetReverbMode_2 hand wrapper passing stack argument to function 800967b4 (was snd_ApplyParamA)
+0x80094264 func snd_ApplyReverbDepth hand wrapper passing stack argument twice to reverb depth setter
+0x80094294 func snd_ApplyParamB hand wrapper passing stack argument to function 80096864
+0x800942c4 func snd_ApplyReverbType hand wrapper passing stack argument to function 800966e4 (was snd_ApplyParamC)
+0x800942f4 func snd_SetReverbTypeWrapper hand duplicate wrapper passing stack argument to function 800966e4 (was snd_ApplyParamC_2)
+0x80094324 func snd_SeqParsePitchBend hand reads byte and calls channel parameter setter with tone index, then delta (was snd_CmdSetChannelParam)
+0x800943d4 func snd_CmdControlChange hand dispatches controller numbers 0,6,7,10,11,0x40,99 etc to handlers via function table
+0x80094604 func snd_CmdSetTempo hand reads 3-byte tempo, computes 60000000 divided, derives tick rate
+0x800947d4 func snd_CmdNoteOff hand note off or velocity-zero note with mute mask check, calls key-off or key-on helpers
+0x800948b4 func snd_CmdProgramChange hand stores program byte into channel tone table then reads delta
+0x80094924 func snd_SeqInitFromData hand initialises channel state from SEQ header, strings not SEQ Data and old SEQ Data Format
+0x80094c74 func snd_SeqPlayDefault hand wrapper calling sequence start for track 0 with mode and repeat
+0x80094cac func snd_SeqPlayWrap hand wrapper sign-extending args to sequence start
+0x80094cf4 func snd_SeqPlayImpl hand rewinds pointers, sets repeat count, mode 1 starts play and fade, mode 0 sets stop flag
+0x80094e14 func snd_SetSpuCommonAttr hand picks spu common attr mask 0x100/0x200/0x1000/0x2000 by two flags, sets volume, calls SpuSetCommonAttr-like (was snd_SetSpuCommonVolSel)
+0x80094ed4 func snd_SetMasterVolume hand mask 3 left/right volumes scaled by 0x81 to spu common attr setter
+0x80094f24 func snd_SetReverbDepth_2 hand scales 0-0x7f volumes to 0x7fff, mask 6, cd attribute setter (was snd_SetCdVolume)
+0x80094f58 func snd_SetReverbDepthScaled_2 hand divides volumes by 64 using HI register, mask 6, cd attribute setter (was snd_SetCdVolumeScaled)
+0x80094fb4 func snd_SeqStopReset hand clears flags, key-off, resets all channel fields, defaults volume 0x7f, pan 0x40 for 16 channels
+0x80095134 func snd_SeqStopResetTrack0 hand calls sequence stop reset for channel 0
+0x8009515c func snd_SeqStopResetWrap hand wrapper sign-extending args to sequence stop reset
+0x80095194 func snd_SetReverbVolume hand clamps volumes to 0x7f, scales by 0x102, masks 0xc0 or 0xc00, spu common attr call
+0x800952a4 func snd_SeqInitTable hand lays out sequence channel tables of 0xb0 bytes each, marks unused slots, clears fields
+0x800954c4 func snd_SetTickRateMode hand switches tick rate setting 0-5 by video mode, stores 0x3c/0xf0/0x78/0x32
+0x80095614 func snd_SetupTickCallback hand installs tick timer mode with reload value by rate mode, reentry guarded
+0x80095844 func snd_SetupTickCallbackOn hand calls tick callback setup with 1
+0x80095864 func snd_SetupTickCallbackOff hand calls tick callback setup with 0
+0x80095884 func snd_TickCallback hand calls optional hook then main sound tick function
+0x800958d0 func snd_TickToggle hand alternates flag, every second call runs sound tick function
+0x800958d8 func snd_TickToggleTail hand tail fragment of toggling tick handler using v0 flag
 0x80095924 func SetRCnt hand sets root counter n (0-2) target and mode flags in table at 0x10 stride, returns 1 or 0
 0x80095a5c func ResetRCnt hand clears root counter value for counter 0-2, returns whether valid
-0x80095a94 func snd_SeqSetFade hand provisional if channel state is 1 starts fade call else stores fade target values at +0x58/+0x5a
-0x80095b24 func snd_SeqSetFade_2 hand provisional fade target setter for first track only, same logic
-0x80095b8c func snd_SeqSetFade_3 hand provisional duplicate fade target setter with sign-extended args
-0x80095c1c func snd_SeqGetVolume hand provisional wraps volume getter, builds voice id from track and channel
-0x80095c54 func snd_SeqFadeStep hand provisional per-tick volume fade step toward target with divide, clears fade flags when done
-0x80095e74 func snd_ResetAllVoices hand provisional loops voices not reserved, sets default adsr and volume attrs, key-off each
-0x80095fc4 func snd_GetProgAtr hand provisional copies 16-byte program attribute record for program from table to buffer if bank valid
-0x800960d4 func snd_GetVagAtr hand provisional copies tone attribute record (0x20 bytes) from tone table for bank program and tone index
-0x80096314 func snd_KeyOnVoice hand provisional key on with note, volume and pan balance computed from two values, selects tone, guards reentry
-0x80096670 func snd_KeyOffVoice hand provisional key-off voice index under 0x18 with reentry guard
-0x800966e4 func snd_SetReverbType hand provisional sets command 8 with value and sends to reverb command function
+0x80095a94 func snd_SeqSetFade hand if channel state is 1 starts fade call else stores fade target values at +0x58/+0x5a
+0x80095b24 func snd_SeqSetFade_2 hand fade target setter for first track only, same logic (was snd_SeqSetFade_2)
+0x80095b8c func snd_SeqSetFade_3 hand duplicate fade target setter with sign-extended args
+0x80095c1c func snd_SeqGetVolume hand wraps volume getter, builds voice id from track and channel
+0x80095c54 func snd_SeqFadeStep hand per-tick volume fade step toward target with divide, clears fade flags when done
+0x80095e74 func snd_ResetAllVoices hand loops voices not reserved, sets default adsr and volume attrs, key-off each
+0x80095fc4 func snd_GetProgAtr hand copies 16-byte program attribute record for program from table to buffer if bank valid
+0x800960d4 func snd_GetVagAtr hand copies tone attribute record (0x20 bytes) from tone table for bank program and tone index
+0x80096314 func snd_KeyOnVoice hand key on with note, volume and pan balance computed from two values, selects tone, guards reentry
+0x80096670 func snd_KeyOffVoice hand key-off voice index under 0x18 with reentry guard
+0x800966e4 func snd_SetReverbType hand sets command 8 with value and sends to reverb command function
 0x80096724 func snd_SetReverbDepth hand scales volumes 0-0x7f to 0x7fff and sends command 6 reverb depth
-0x80096758 func snd_SetReverbDepthScaled hand provisional reverb depth with divide-by-64 scaling, command 6
-0x800967b4 func snd_SetReverbMode hand provisional mode under 10 with optional negative flag 0x100, off when 0, else command 1
-0x80096864 func snd_SetReverbDelay hand provisional sets command 0x10 reverb delay value and sends
-0x800968a4 func snd_ReverbOff hand provisional calls reverb switch with 0
-0x800968c4 func snd_ReverbOn hand provisional calls reverb switch with 1
-0x800968e4 func snd_SetVagAtr hand provisional writes tone attribute record (0x20 bytes) back to tone table
-0x80096ab4 func snd_ResetVoiceVol hand provisional resets volume of voice index under 0x18 via helper
-0x80096b54 func snd_GetVoiceVol hand provisional reads voice left and right volume, divides by 0x81
-0x80096c00 func snd_SetVoiceVol hand provisional stores left and right volumes times 0x81 to voice record, sets update flags
-0x80096c84 func snd_VoiceRestartEnvelope hand provisional resets voice vol, picks pitch from tone, loads adsr from tone and flags update
-0x80096e54 func snd_PedalOff hand provisional sets sustain-pedal state global to 0
-0x80096e64 func snd_PedalOn hand provisional sets sustain-pedal state global to 2
-0x80096e74 func snd_UpdateVoices_2 hand provisional main voice maintenance: ring-buffer flags, polls each voice, key-on/off and envelope handling
-0x80097304 func snd_InitVoiceMgr hand provisional resets spu, clears volume, voice flag and bank tables, caps voice count 0x18, runs voice update
-0x80097654 func snd_KeyOnImpl hand provisional long key-on: validates tone, mixes volume with channel vol, selects voice, sets pitch and adsr
-0x80097b70 func snd_KeyOffMatching hand provisional key-offs or frees every voice matching note, bank, program and tone, returns count
-0x80097cd0 func snd_KeyOnBalanced hand provisional computes pan from two volumes then calls key-on with 0x21 manual id
-0x80097dbc func snd_KeyOffManual hand provisional key-off matching voices for manual id 0x21
-0x80097e04 func snd_AllocVoice hand provisional picks free or lowest priority voice index among unreserved voices for steal
-0x80098074 func snd_CalcPitchDefault hand provisional clamps fine tune to 0x7f and computes pitch from current note globals
-0x800980c0 func snd_CalcPitchFromTone hand provisional looks up tone center and fine tune then computes pitch
+0x80096758 func snd_SetReverbDepthScaled hand reverb depth with divide-by-64 scaling, command 6
+0x800967b4 func snd_SetReverbMode hand mode under 10 with optional negative flag 0x100, off when 0, else command 1
+0x80096864 func snd_SetReverbDelay hand sets command 0x10 reverb delay value and sends
+0x800968a4 func snd_ReverbOff hand calls reverb switch with 0
+0x800968c4 func snd_ReverbOn hand calls reverb switch with 1
+0x800968e4 func snd_SetVagAtr hand writes tone attribute record (0x20 bytes) back to tone table
+0x80096ab4 func snd_GetVoiceVolume hand resets volume of voice index under 0x18 via helper (was snd_ResetVoiceVol)
+0x80096b54 func snd_GetVoiceVol hand reads voice left and right volume, divides by 0x81
+0x80096c00 func snd_SetVoiceVol hand stores left and right volumes times 0x81 to voice record, sets update flags
+0x80096c84 func snd_VoiceRestartEnvelope hand resets voice vol, picks pitch from tone, loads adsr from tone and flags update
+0x80096e54 func snd_PedalOff hand sets sustain-pedal state global to 0
+0x80096e64 func snd_PedalOn hand sets sustain-pedal state global to 2
+0x80096e74 func snd_UpdateVoices_2 hand main voice maintenance: ring-buffer flags, polls each voice, key-on/off and envelope handling
+0x80097304 func snd_InitVoiceMgr hand resets spu, clears volume, voice flag and bank tables, caps voice count 0x18, runs voice update
+0x80097654 func snd_KeyOnImpl hand long key-on: validates tone, mixes volume with channel vol, selects voice, sets pitch and adsr
+0x80097b70 func snd_KeyOffMatching hand key-offs or frees every voice matching note, bank, program and tone, returns count
+0x80097cd0 func snd_KeyOnBalanced hand computes pan from two volumes then calls key-on with 0x21 manual id
+0x80097dbc func snd_KeyOffManual hand key-off matching voices for manual id 0x21
+0x80097e04 func snd_AllocVoice hand picks free or lowest priority voice index among unreserved voices for steal
+0x80098074 func snd_CalcPitchDefault hand clamps fine tune to 0x7f and computes pitch from current note globals
+0x800980c0 func snd_CalcPitchFromTone hand looks up tone center and fine tune then computes pitch
 0x80098128 func snd_CalcPitch hand computes spu pitch from note, fine tune using semitone and fine tables, shifted by octave
-0x80098254 func snd_KeyOnVoiceSetup hand provisional mixes volume with pan, program and channel levels to l/r spu volumes, marks voice key-on flags
-0x800987c4 func snd_ClearVoiceSlot hand provisional zeroes three voice state bytes for voice index
-0x80098804 func snd_ReleaseVoice hand provisional clears voice slot and sets bit in key-off mask, clears from key-on mask
-0x800988c4 func snd_KeyOnVoiceSetup_2 hand provisional second variant of volume mixing and key-on setup with extra parameter
-0x80098d94 func snd_PitchBendVoice hand provisional applies pitch bend value to matching voice note and fine, recomputes pitch
-0x80098f80 func snd_PitchBendAll hand provisional loops all voices applying pitch bend for given channel and program
-0x80099064 func snd_SetProgAttrByte1 hand provisional validates bank/program then writes byte 1 of program attribute record
-0x800990d4 func snd_GetProgAttrByte1 hand provisional validates bank/program then returns byte 1 of program attribute record
-0x80099124 func snd_SetProgAttrByte4 hand provisional validates bank/program then writes byte 4 of program attribute record
-0x80099194 func snd_GetProgAttrByte4 hand provisional validates bank/program then returns byte 4 of program attribute record
-0x800991e4 func snd_SeqSetVolumeUpdate hand provisional clamps seq left/right volume to 0x7f, recomputes volumes of all voices owned by it
-0x80099750 func snd_GetSeqVolumes hand provisional returns seq channel left and right volume from record, stores current owner id
-0x80099844 func snd_KeyOffByOwner hand provisional releases every active voice whose owner id matches
-0x800998f4 func snd_CollectToneLayers hand provisional gathers tone indices whose key range contains current note, returns count
-0x800999c4 func snd_ApplyChannelVolume hand provisional recomputes l/r volumes for voices of channel when program volume or pan changed
-0x80099f64 func snd_SelectBankProgram hand provisional validates bank and program, loads pointers to bank tables into globals
-0x8009a024 func snd_SetStereoMode hand provisional sets global stereo flag to 1
-0x8009a034 func snd_SetMonoMode hand provisional clears global stereo flag
-0x8009a044 func snd_VabClose hand provisional frees bank slot, decrements bank count, spu transfer reset when none
-0x8009a0f4 func snd_VabTransferEnd hand provisional marks bank slot ready after transfer, clears busy flag
-0x8009a164 func snd_VabOpenHead hand provisional opens VAB header with default callback label
-0x8009a198 func snd_VabOpenHead_2 hand provisional duplicate wrapper opening VAB header with default callback
-0x8009a1d4 func snd_VabOpenHeadImpl hand provisional validates VAB header, picks free bank slot, copies program and tone tables, computes spu size
-0x8009a5c4 func snd_VabTransferBody hand provisional starts spu transfer of VAB body data for opened bank
-0x8009a684 func snd_VabTransferDoneCheck hand provisional wrapper polling transfer completion function
-0x8009a6b4 func snd_SpuInitDefault hand provisional calls spu init with 1
-0x8009a6d4 func snd_SpuInit hand provisional resets spu, sets 24 voice volume regs 0xc000, installs events, clears spu state globals
-0x8009a7bc func spu_InitEvents hand provisional once: critical section, sets callback, OpenEvent 0xf0000009 and EnableEvent
+0x80098254 func snd_KeyOnVoiceSetup hand mixes volume with pan, program and channel levels to l/r spu volumes, marks voice key-on flags
+0x800987c4 func snd_ClearVoiceSlot hand zeroes three voice state bytes for voice index
+0x80098804 func snd_ReleaseVoice hand clears voice slot and sets bit in key-off mask, clears from key-on mask
+0x800988c4 func snd_KeyOnVoiceSetup_2 hand second variant of volume mixing and key-on setup with extra parameter
+0x80098d94 func snd_PitchBendVoice hand applies pitch bend value to matching voice note and fine, recomputes pitch
+0x80098f80 func snd_PitchBendAll hand loops all voices applying pitch bend for given channel and program
+0x80099064 func snd_SetProgAttrByte1 hand validates bank/program then writes byte 1 of program attribute record
+0x800990d4 func snd_GetProgAttrByte1 hand validates bank/program then returns byte 1 of program attribute record
+0x80099124 func snd_SetProgAttrByte4 hand validates bank/program then writes byte 4 of program attribute record
+0x80099194 func snd_GetProgAttrByte4 hand validates bank/program then returns byte 4 of program attribute record
+0x800991e4 func snd_SeqSetVolumeUpdate hand clamps seq left/right volume to 0x7f, recomputes volumes of all voices owned by it
+0x80099750 func snd_GetSeqVolumes hand returns seq channel left and right volume from record, stores current owner id
+0x80099844 func snd_KeyOffByOwner hand releases every active voice whose owner id matches
+0x800998f4 func snd_CollectToneLayers hand gathers tone indices whose key range contains current note, returns count
+0x800999c4 func snd_ApplyChannelVolume hand recomputes l/r volumes for voices of channel when program volume or pan changed
+0x80099f64 func snd_SelectBankProgram hand validates bank and program, loads pointers to bank tables into globals
+0x8009a024 func snd_SetStereoMode hand sets global stereo flag to 1
+0x8009a034 func snd_SetMonoMode hand clears global stereo flag
+0x8009a044 func snd_VabClose hand frees bank slot, decrements bank count, spu transfer reset when none
+0x8009a0f4 func snd_VabTransferEnd hand marks bank slot ready after transfer, clears busy flag
+0x8009a164 func snd_VabOpenHead hand opens VAB header with default callback label
+0x8009a198 func snd_VabOpenHead_2 hand duplicate wrapper opening VAB header with default callback
+0x8009a1d4 func snd_VabOpenHeadImpl hand validates VAB header, picks free bank slot, copies program and tone tables, computes spu size
+0x8009a5c4 func snd_VabTransferBody hand starts spu transfer of VAB body data for opened bank
+0x8009a684 func snd_VabTransferDoneCheck hand wrapper polling transfer completion function
+0x8009a6b4 func snd_SpuInitDefault hand calls spu init with 1
+0x8009a6d4 func snd_SpuInit hand resets spu, sets 24 voice volume regs 0xc000, installs events, clears spu state globals
+0x8009a7bc func spu_InitEvents hand once: critical section, sets callback, OpenEvent 0xf0000009 and EnableEvent
 0x8009a834 func spu_Reset hand resets spu control regs and waits with SPU:T/O wait (reset) message, sets default regs
 0x8009aab4 func spu_TransferPio hand writes words to spu data port in 64-word bursts, waits dma flags, message wait dmaf clear/W
-0x8009aac4 func spu_TransferPio_2 hand provisional second entry of spu pio transfer routine with timeout messages
+0x8009aac4 func spu_TransferPio_2 hand second entry of spu pio transfer routine with timeout messages
 0x8009ac74 func spu_TransferDone hand clears SPUCNT transfer mode bits 0x30, waits, delivers event 0xf0000009 or calls user callback
-0x8009ac7c func spu_TransferDone_2 hand provisional second entry of spu transfer-done routine, same wait and event delivery
+0x8009ac7c func spu_TransferDone_2 hand second entry of spu transfer-done routine, same wait and event delivery
 0x8009ad30 func spu_StartDmaWrite hand sets SPU transfer address, SPUCNT 0x30, programs DMA4 madr bcr chcr 0x01000200
-0x8009ad38 func spu_StartDmaWrite_2 hand provisional second entry of spu dma write start with register already loaded
+0x8009ad38 func spu_StartDmaWrite_2 hand second entry of spu dma write start with register already loaded
 0x8009add8 func spu_TransCtrl hand switch on mode: 0 write mode, 1 read mode, 2 set transfer address, 3 start DMA with timeout
-0x8009ade8 func spu_TransCtrl_2 hand provisional second entry of spu transfer control switch
+0x8009ade8 func spu_TransCtrl_2 hand second entry of spu transfer control switch
 0x8009b058 func SpuWrite hand sets address, write mode, DMA transfer, or PIO write when dma disabled, returns size
 0x8009b0dc func SpuRead hand sets address, read mode, starts DMA transfer from spu ram, returns size
 0x8009b140 func spu_SetRegShort hand stores halfword in spu register by index, optionally shifted by address shift
@@ -1262,7 +1262,7 @@
 0x8009b2bc func spu_DmaPrioritySet hand sets DPCR channel 4 field to 2 enabling spu dma priority
 0x8009b2e4 func spu_DmaPrioritySet_2 hand sets DPCR channel 4 field to 0x22 variant
 0x8009b30c func spu_Delay hand busy loop of 0x3c iterations for hardware settle time
-0x8009b374 func spu_CallMode4 hand provisional wrapper calling dispatcher with mode 4 and given argument
+0x8009b374 func spu_CallMode4 hand wrapper calling dispatcher with mode 4 and given argument
 0x8009b3a4 func SpuInitMalloc hand sets up spu memory block table with count and buffer, first entry free covering ram
 0x8009b404 func SpuFree hand finds allocated block by address, marks free, calls merge routine
 0x8009b484 func spu_MergeFreeBlocks hand coalesces adjacent free blocks in spu allocation table, compacts entries
@@ -1270,8 +1270,8 @@
 0x8009b7b4 func spu_UpdateVoiceMaskPair hand mode set, clear or replace of 24-bit voice mask over two spu regs, shadow copy
 0x8009ba74 func SpuSetNoiseClock hand clamps 0..0x3f and stores in SPUCNT noise clock bits 8-13
 0x8009bac4 func SpuSetReverb hand sets or clears reverb enable bit 0x80 in SPUCNT after work area check
-0x8009bc14 func spu_ReverbAreaOk hand provisional checks reverb work area address against free blocks in spu allocation table
-0x8009bca4 func SpuSetReverbModeParam hand provisional mask-driven struct setting reverb mode, delay, feedback, SPUCNT reverb bits and work area start
+0x8009bc14 func spu_ReverbAreaOk hand checks reverb work area address against free blocks in spu allocation table
+0x8009bca4 func SpuSetReverbModeParam hand mask-driven struct setting reverb mode, delay, feedback, SPUCNT reverb bits and work area start
 0x8009c184 func spu_SetReverbRegs hand mask-driven copy of reverb coefficient struct into spu regs 0x1c0-0x1fe
 0x8009c654 func SpuSetReverbDepth hand writes reverb output volume left and right to regs 0x184 and 0x186 and shadow
 0x8009c6d4 func SpuSetReverbVoice hand wrapper of voice-mask pair update with regs 0xcc 0xcd reverb enable
@@ -1284,7 +1284,7 @@
 0x8009cbf4 func SpuIsTransferCompleted hand tests spu event for transfer done, optionally busy waits, sets done flag
 0x8009cca4 func spu_SetTransferDoneFlag hand stores flag whether transfer pending from argument
 0x8009cccc func spu_TransferPending hand returns true when transfer done flag is not 1
-0x8009cce4 func spu_SetCdExtAttr hand provisional mask-driven setting of SPUCNT cd and external input mix mode bits with switch 0..7
+0x8009cce4 func spu_SetVolumeMix hand mask-driven setting of SPUCNT cd and external input mix mode bits with switch 0..7 (was spu_SetCdExtAttr)
 0x8009d064 func SpuSetVoiceAttr hand loops 24 voices by mask, writes volume, pitch, start addr, adsr from attribute struct
 0x8009d664 func spu_NoteToPitch hand converts note and fine tune to spu pitch via semitone and fraction tables, shifts by octave, max 0x3fff
 0x8009d864 func SpuGetVoiceVolume hand reads left and right volume regs of voice, expands 15-bit sign mode values
@@ -1292,11 +1292,11 @@
 0x8009d8e4 func stub_8009d8e4 hand thin wrapper calling function at 8009e0e0
 0x8009d904 func stub_8009d904 hand thin wrapper calling function at 8009e0f4
 0x8009d924 func stub_8009d924 hand thin wrapper calling function at 8009e1c0
-0x8009d990 func snd_GetPlayStateCode hand provisional gets current sequence object via callback, maps state byte 0x49 to simplified play code 1..4
-0x8009da5c func snd_QuerySeqInfo hand provisional entry fragment of sequence info query by selector via object callback
-0x8009da64 func snd_QuerySeqInfo_2 hand provisional returns sequence field by selector 1,2,3,4,100: bytes, track table word, count
-0x8009db54 func snd_QuerySeqEntry hand provisional entry fragment of per-entry 5-byte record field query
-0x8009db5c func snd_QuerySeqEntry_2 hand provisional returns entry count or field 1..5 of 5-byte record from sequence object table
+0x8009d990 func snd_GetSequenceStatus hand gets current sequence object via callback, maps state byte 0x49 to simplified play code 1..4 (was snd_GetPlayStateCode)
+0x8009da5c func snd_QuerySeqInfo hand entry fragment of sequence info query by selector via object callback
+0x8009da64 func snd_QuerySeqInfo_2 hand returns sequence field by selector 1,2,3,4,100: bytes, track table word, count
+0x8009db54 func snd_QuerySeqEntry hand entry fragment of per-entry 5-byte record field query
+0x8009db5c func snd_QuerySeqEntry_2 hand returns entry count or field 1..5 of 5-byte record from sequence object table
 0x8009dc28 func pad_InfoMode hand libpad PadInfoMode-style query: port struct via PTR_FUN_800ae660, offset 0xea count, per-mode id table lookup
 0x8009dc30 func pad_InfoMode_2 hand continuation body of pad_InfoMode (in_v0 indirect call, same mode/term lookup logic)
 0x8009dcd0 func pad_RequestCommand hand gets port struct via PTR_FUN_800ae660 then calls FUN_8009f450 to queue command with one argument
@@ -1540,19 +1540,19 @@
 0x80181840 func data_80181840 hand data mistaken for code, halt_baddata
 0x80194f10 func loader_RenderFrame hand loader screen draw: sprite lists 801a3578.., advances LCG random *5+0x3573, toggles double-buffer index, FUN_80198dcc
 0x8019512c func loader_DrawLogoSprites hand sets gp rect fields from table 801a35f8/3608 and draws two sprites via FUN_8019c5b4
-0x801951e4 func loader_CallSub8019cc4c hand tiny wrapper calling FUN_8019cc4c, probably gpu draw sync, provisional
+0x801951e4 func loader_SsSeqCalledTbyT hand tiny wrapper calling FUN_8019cc4c, probably gpu draw sync, (was loader_CallSub8019cc4c)
 0x80195204 func loader_LoadAraBinAndRun hand clears RAM 0x80010000-0x80180000, inits GPU and CD, reads \ARA.BIN;1, errors File open error, jumps to loaded code
 0x80195a3c func CdInit_2 hand retries cd init step 5 times, installs callbacks, prints CdInit: Init failed on failure
 0x80195acc func cd_TryResetStep hand calls FUN_80197474 and FUN_80197338, returns true when both succeed
 0x80195b08 func cd_DeliverEventComplete hand biosB0_DeliverEvent_2(0xf0000003,0x20) callback body
 0x80195b30 func cd_DeliverEventError hand biosB0_DeliverEvent_2(0xf0000003,0x40) callback body
 0x80195b58 func cd_DeliverEventError_2 hand biosB0_DeliverEvent_2(0xf0000003,0x40) default sync callback body
-0x80195b9c func CdStatus hand returns cd status byte DAT_801a1b20, provisional
-0x80195bac func CdMode hand returns cd mode byte DAT_801a1b30, provisional
+0x80195b9c func CdStatus hand returns cd status byte DAT_801a1b20,
+0x80195bac func CdMode hand returns cd mode byte DAT_801a1b30,
 0x80195bcc func cd_GetResultBufferPtr_2 hand returns address of cd result buffer DAT_801a1b2c
-0x80195bd8 func CdReset_2 hand mode 2 calls FUN_80197428, else FUN_80197474 and FUN_80197338 test, provisional
-0x80195c44 func cd_FlushQueue hand thin wrapper calling FUN_80197264, provisional
-0x80195c64 func CdDataCallback_2 hand swaps callback pointer DAT_801a1b1c and returns old, provisional
+0x80195bd8 func CdInitMode2 hand mode 2 calls FUN_80197428, else FUN_80197474 and FUN_80197338 test, (was CdReset_2)
+0x80195c44 func cd_ResetController_2 hand thin wrapper calling FUN_80197264, (was cd_FlushQueue)
+0x80195c64 func CdSetCallback_2 hand swaps callback pointer DAT_801a1b1c and returns old, (was CdDataCallback_2)
 0x80195ce0 func CdSync_2 hand thin wrapper calling FUN_80196888 wait for command completion
 0x80195d00 func CdReady_2 hand thin wrapper calling FUN_80196b08 data-ready poll
 0x80195d20 func CdSyncCallback_2 hand swaps callback pointer DAT_801a1b14 and returns old
@@ -1560,18 +1560,18 @@
 0x80195d48 func CdControl_2 hand retries 4 times command send FUN_80196dd0, optional queued pre-command, disables callback during send
 0x80195e84 func CdControlF_2 hand same retry loop as CdControl sending FUN_80196dd0 with fast flag 1
 0x80195fb8 func CdControlB_2 hand CdControl retry loop then waits FUN_80196888 and returns true if result 2
-0x80196104 func cd_StartOp801971dc hand calls FUN_801971dc and returns 1, provisional
+0x80196104 func cd_Mix hand calls FUN_801971dc and returns 1, (was cd_StartOp801971dc)
 0x80196124 func cd_IsIdleA hand returns true when FUN_801977bc returns 0
 0x80196144 func cd_IsIdleB hand returns true when FUN_801978bc returns 0
-0x80196164 func cd_SetDmaCallback3 hand calls FUN_8019905c(3,fn) DMACallback table slot with channel 3 (CD), provisional
-0x80196188 func cd_CallSub80197654 hand thin wrapper calling FUN_80197654, provisional
+0x80196164 func cd_SetDmaCallback3 hand calls FUN_8019905c(3,fn) DMACallback table slot with channel 3 (CD),
+0x80196188 func cd_StopDmaTransfer hand thin wrapper calling FUN_80197654, (was cd_CallSub80197654)
 0x801961a8 func CdIntToPos_2 hand sector+150 to BCD minute second frame, 75 frames per second
 0x801962ac func CdPosToInt_2 hand BCD minute second frame to sector index minus 150
 0x8019632c func cd_ReadInterruptResult hand reads CDROM regs, drains 8-byte response FIFO, tracks status bit 0x10 change, returns event flags for callbacks, prints unknown intr
 0x80196888 func cd_SyncWait hand polling wait CD_sync with 0x3c0 vblank timeout, prints CD timeout and NoIntr, runs interrupt handler and callbacks
 0x80196b08 func cd_ReadyWait hand same polling loop as cd_SyncWait labelled CD_ready, returns interrupt code and copies result bytes
 0x80196dd0 func cd_SendCommand hand prints CdlSync command name, waits via cd_SyncWait, writes parameter bytes and command to CDROM regs, retries
-0x801971dc func CdMix_2 hand writes 4-byte volume matrix to CDROM regs index 2 and 3, provisional
+0x801971dc func cd_SetVolumeMatrix hand writes 4-byte volume matrix to CDROM regs index 2 and 3, (was CdMix_2)
 0x80197264 func cd_ResetController hand clears CDROM interrupt flags until idle, resets state vars, writes DAT_801a1de8 0x1325
 0x80197338 func spu_EnableCdAudio hand sets SPU cd volume regs to 0x3fff and CD audio mix 0x80 via CDROM regs
 0x80197350 func spu_EnableCdAudio_2 hand same SPU cd volume setup entered mid-function via in_v1, skips first test
@@ -1583,7 +1583,7 @@
 0x80197958 func cd_DmaFinishTransfer hand waits CDROM data-ready bit then writes DMA control 0x11400100
 0x801979b4 func cd_InterruptCallback hand loops cd_ReadInterruptResult dispatching sync and ready callbacks, restores index register
 0x801979bc func cd_InterruptCallback_2 hand same dispatch loop entered mid-function via in_v0
-0x80197a8c func CdSearchFile_Prefix hand tiny entry with disc ID check DAT_801a1e30 vs DAT_801a1b28 reload, path parse, provisional alias into CdSearchFile
+0x80197a8c func CdSearchFile_3 hand tiny entry with disc ID check DAT_801a1e30 vs DAT_801a1b28 reload, path parse, alias into CdSearchFile (was CdSearchFile_Prefix)
 0x80197a9c func CdSearchFile_2 hand reloads disc dir tables on media change, walks backslash path levels, prints path level error and dir not found, returns file entry
 0x80197d64 func cd_IsSameName12 hand memcmp-style 12 byte compare returns true when equal
 0x80197d84 func cd_NewMedia_2 hand reads PVD sector 0x10, checks CD001, loads path table into 0x80 dir entries, prints CD_newmedia errors
@@ -1604,12 +1604,12 @@
 0x80198ffc func etc_DispatchSlot0C hand jumps through callback table PTR_PTR_801a2f7c slot +0xc, provisional
 0x8019902c func InterruptCallback_2 hand jumps through callback table slot +8 (irq, fn), used for irq 2 CD and irq 0 vblank
 0x8019905c func DMACallback_2 hand jumps through callback table slot +4 (channel, fn)
-0x8019908c func VSyncCallback hand calls table slot +0x14 with argument 4 and fn, provisional
-0x801990c0 func etc_DispatchSlot14 hand jumps through callback table slot +0x14, provisional
+0x8019908c func VSyncCallback hand calls table slot +0x14 with argument 4 and fn,
+0x801990c0 func etc_DispatchSlot14 hand jumps through callback table slot +0x14,
 0x801990c8 func etc_DispatchSlot14_2 hand same slot +0x14 jump entered mid-function via in_v0
-0x801990f0 func etc_DispatchSlot10 hand jumps through callback table slot +0x10, provisional
+0x801990f0 func etc_DispatchSlot10 hand jumps through callback table slot +0x10,
 0x801990f8 func etc_DispatchSlot10_2 hand same slot +0x10 jump entered mid-function via in_v0
-0x80199120 func etc_DispatchSlot18 hand jumps through callback table slot +0x18, provisional
+0x80199120 func etc_DispatchSlot18 hand jumps through callback table slot +0x18,
 0x80199128 func etc_DispatchSlot18_2 hand same slot +0x18 jump entered mid-function via in_v0
 0x80199150 func CheckCallback hand returns in-interrupt flag DAT_801a1ef6 set while handler runs
 0x80199178 func etc_SwapIntrMask hand writes new value to I_MASK and returns old one
@@ -1679,7 +1679,7 @@
 0x8019c260 func gpu_DrawSyncCore hand mode 0 blocks until queue empty and GPU idle, else returns pending count
 0x8019c39c func gpu_StartTimeout_2 hand reads VSync counter and stores deadline +0xf0
 0x8019c3d0 func gpu_CheckTimeout_2 hand prints GPU timeout with queue size and stat/chcr/madr, then resets GPU state
-0x8019c514 func gpu_InitDisplayMode hand GP1 0x10000007 query, detects mode and sets GP1 display flags, provisional
+0x8019c514 func gpu_InitDisplayMode hand GP1 0x10000007 query, detects mode and sets GP1 display flags,
 0x8019c5b4 func LoadImage2_2 hand string LoadImage2: checks rect, waits for GPU idle with timeout, installs queue irq, uploads image
 0x8019c6a0 func StoreImage2_2 hand string StoreImage: waits GPU idle with timeout then downloads VRAM rect
 0x8019c78c func MoveImage2_2 hand string MoveImage: waits GPU idle, builds src rect and dst xy command, runs driver slot +0x18

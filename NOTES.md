@@ -17,8 +17,11 @@
 - CsDumpAll dump (1,767 functions, 2.2 MB) -> `injecthints.py` -> `trimdump.py` -> `slice.py 4` (326-468 functions per slice) -> one naming agent per slice with `ghidra/naming/prompt_r1.txt` (rule at the end: every name comes from reading the code, never from a script; per-slice check: line count = function count, every line `0x<8 hex> func <name> hand <comment>`).
 - `dedupnames.py`: names unique across slices, 0 functions missing.
 - ApplyNames (hand mode): 1,767 named; export `ghidra/funcinfo_rkram.tsv`: 1,767 functions, 0 FUN_, 227 provisional.
-- Two slices used different prefixes for the character state machine (`char_` and `chr_`): merge in round 2.
+- Two slices used different prefixes for the character state machine (`char_` and `chr_`): merged into `char_` in round 2.
+
+## Review round 1 (2026-10-18)
+- The 227 provisional names were re-read with their callers (`tools/provctx.py` contexts, prompt `ghidra/review/prompt_r1_rk.txt`) by a local model; verdict lines in `review/RK1_verdicts.txt`: confirmed 196, renamed 26, unsure 5. Applied with `tools/srprovapply.py`, `chr_` merged into `char_`, re-applied and re-exported: 1767 functions, 0 FUN_, 5 provisional.
 
 ## Next
-- Round 2: the 227 provisional names re-read with callers (`tools/provctx.py`, prompt `ghidra/review/prompt_r1_rk.txt`, verdict lines `RK 0x<addr> <old> CONFIRM|RENAME|UNSURE <new> <reason>`, applied with `tools/srprovapply.py`), then re-apply and re-export.
+- Struct typing for the character record (state machine offsets), the move table, and the bitmap/drawing canvas format.
 - Title / menu code only present in the attract-mode dumps (above 0x8012d374) is not covered.

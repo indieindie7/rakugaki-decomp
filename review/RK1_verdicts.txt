@@ -1,0 +1,227 @@
+RK 0x800005f0 bios_cdDeliverEventsA CONFIRM bios_cdDeliverEventsA Body repeatedly calls BIOS interrupt 0xB0 with CD command 0x3 and various spec flags, matching the provisional name.
+RK 0x8000066c bios_cdDeliverEventsB CONFIRM bios_cdDeliverEventsB Calls BIOS CD event delivery with standard interrupt specs, consistent with CD driver initialization in setmode.
+RK 0x800011b4 bios_cdCmdSetloc CONFIRM bios_cdCmdSetloc Body matches BIOS CD command wrapper: checks status, writes opcode 2 (SetLocation) and param to hardware registers.
+RK 0x800012ec bios_cdCmdSetmode CONFIRM bios_cdCmdSetmode Writes CD command 0x0e (Setmode) and mode byte to hardware registers, matching BIOS CD control behavior.
+RK 0x8000395c sio_padTransferPort CONFIRM sio_padTransferPort Code directly manipulates SIO registers (0x1f801040/44/4a) and memory mapped I/O (0xbf801070) to perform a low-level serial transfer for a specific port index, 
+RK 0x80034410 game_ToggleDebugHpOverlay CONFIRM game_ToggleDebugHpOverlay Code checks debug flags and pad inputs to toggle a debug overlay, calculates HP percentages from player/team data, and draws text/numbers to the screen.
+RK 0x8003844c cam_UpdateViewMatrixTail CONFIRM cam_UpdateViewMatrixTail Function builds view matrix tail by setting GTE control regs, copying camera data to global state, and calling sceGs view matrix functions.
+RK 0x8003abec col_MoveObjectVsBoxes CONFIRM col_MoveObjectVsBoxes Function iterates through a list of box structures (DAT_800e4728), performs AABB collision checks against an object's position/velocity, and resolves penetratio
+RK 0x8004070c ui_UpdatePauseOverlay CONFIRM ui_UpdatePauseOverlay Function manages pause state, handles pad input for resume/menu, fades music, and draws overlay graphics.
+RK 0x80040d78 ui_DrawTextListTail CONFIRM ui_DrawTextListTail Function draws a list of SJIS strings with spacing and creates a gray backdrop polygon, matching the provisional name.
+RK 0x800411a4 menu_SaveLoadTask CONFIRM menu_SaveLoadTask Body implements a complex state machine handling memory card operations (check, format, save, load), UI messages, and error states via memcard_* and ui_* calls.
+RK 0x80042a54 fx_DrawTransitionQuadTail CONFIRM fx_DrawTransitionQuadTail Code sets POLY_F4 vertex coords with offsets and allocates a draw packet, matching the provisional name.
+RK 0x80042d78 ai_CheckNearEdge CONFIRM ai_CheckNearEdge Function checks distance to target and performs collision probe to set avoidance bits, matching the name.
+RK 0x80044008 fx_SpawnRowObjectsTail UNSURE fx_SpawnRowObjectsTail No callers provided to verify context; body shows complex slot filling logic but name is plausible based on internal structure.
+RK 0x80045708 ui_SelectStageLabelIds RENAME ui_DrawStageLabelSprites Function iterates a sprite table and calls gfx_DrawSizedSpriteFT4 to render stage labels, not just select IDs.
+RK 0x80057928 coll_ClampPointToBoxes RENAME coll_SpawnHitEffects Function calculates intersection point of two boxes and spawns visual/audio effects based on type, not clamping points.
+RK 0x8005ac38 fx_UpdateOffscreenIndicatorArrow CONFIRM fx_UpdateOffscreenIndicatorArrow Code clamps screen coords to ellipse bounds, rotates sprite via atan2 angle, and draws off-screen indicator sprites.
+RK 0x8005b0dc fx_UpdateOffscreenIndicatorColored CONFIRM fx_UpdateOffscreenIndicatorColored Code projects entity to screen, clamps coords to bounds, sets RGB based on mode, draws sprite, and kills task.
+RK 0x8005d3e8 fx_UpdateMultiPartEffect CONFIRM fx_UpdateMultiPartEffect Function manages a complex state machine for an effect with multiple parts, performing rotation calculations, spawning ghost polys, and updating positions.
+RK 0x80062be4 fx_SpawnCharacterTrailEffect CONFIRM fx_SpawnCharacterTrailEffect Spawns a multi-part visual effect (sprite 0x52) linked to a character, used for aiming/throwing trails.
+RK 0x80065620 proj_UpdateSpinningHitSprite CONFIRM proj_UpdateSpinningHitSprite Body increments rotation angles, rotates velocity vector, updates position, queues collision box, and handles timer expiry/death state.
+RK 0x80065804 fx_UpdateSlotSpriteGeneric CONFIRM fx_UpdateSlotSpriteGeneric Function implements a generic state machine for sprite effects, handling slot allocation, animation stepping, physics updates, and rendering submission as descr
+RK 0x80068420 chr_UpdateCharSweepCollision CONFIRM chr_UpdateCharSweepCollision Function computes movement vectors, calls coll_MoveObjectVsWorld for sweeping collision, and queues character hit boxes, matching the name.
+RK 0x80068ca8 chr_UpdateCharSweepCollisionYaw CONFIRM chr_UpdateCharSweepCollisionYaw Function performs character movement sweep collision using yaw angle from offset 0xce, consistent with name and caller context.
+RK 0x800692d4 chr_UpdateShadowGround CONFIRM chr_UpdateShadowGround Function performs vertical ground collision probing and constructs/draws a projected shadow sprite primitive, matching the provisional name.
+RK 0x8006af04 fx_DrawScreenEdgeMarker CONFIRM fx_DrawScreenEdgeMarker Code calculates a clamped screen position using wobble data, checks bounds, generates a rotated quad from a lookup table, and draws it as a marker.
+RK 0x8006ce00 cam_UpdateEventSequence CONFIRM cam_UpdateEventSequence Function implements a state machine (switch on byte 0x4c) for camera events, managing frame counters, screen effects, and sound triggers, fitting the name.
+RK 0x8006e7cc fx_UpdateGlowPulseByState CONFIRM fx_UpdateGlowPulseByState Function updates glow color pulse and scale based on state byte at 0x1bc, matching name.
+RK 0x8006fb5c chr_UpdateBreakableFxState UNSURE chr_UpdateBreakableFxState unparsed reply
+RK 0x80070940 fx_UpdateDeathPoofState CONFIRM fx_UpdateDeathPoofState Function manages a state machine for death effects, spawning particle emitters and playing sounds consistent with a 'poof' effect.
+RK 0x80078660 chr_UpdateKnockedFlyingMode CONFIRM chr_UpdateKnockedFlyingMode Function handles specific fighter states (0x27, 0x30) involving knockback physics, target aiming, and out-of-bounds checks consistent with a 'knocked flying' mo
+RK 0x8007d5ac chr_InitSmallDamageParams CONFIRM chr_InitSmallDamageParams Function initializes specific damage-related fields (hit points, flags) and copies a parameter offset, consistent with the provisional name.
+RK 0x8007d60c chr_InitScaledDamageParams CONFIRM chr_InitScaledDamageParams Function scales a fixed-point value, initializes specific damage/attack byte parameters at offsets 0x158-0x165, and copies base params, matching the name.
+RK 0x8007fc04 stub_8007fc04 UNSURE stub_8007fc04 Insufficient context to determine specific function purpose or module prefix.
+RK 0x80081b2c memcard_FormatSlotChannel CONFIRM memcard_FormatSlotChannel Function shifts slot index by 4 to calculate channel/offset and calls card_FormatCard, consistent with formatting a specific memory card slot.
+RK 0x80081c30 pad_SetMainModeIfDualShock CONFIRM pad_SetMainModeIfDualShock Function checks play state code 6 and issues a pad mode command, consistent with setting DualShock main mode.
+RK 0x800826d0 obj_UpdateBreakableState CONFIRM obj_UpdateBreakableState Implements a state machine (states 0-10) for breakable objects, handling initialization, physics integration, boundary checks, and triggering debris spawning vi
+RK 0x80082b5c obj_UpdateFallingState CONFIRM obj_UpdateFallingState Function initializes a falling state, spawns debris/characters during fall, and transitions to landed state after timer expires.
+RK 0x80082fc0 fx_UpdateScriptedEffect CONFIRM fx_UpdateScriptedEffect State machine updates position/rotation and spawns child objects based on timer states.
+RK 0x800839c8 obj_UpdateEmitterState CONFIRM obj_UpdateEmitterState Function updates particle emitter state, projects points via GTE, and spawns sprites.
+RK 0x8008dbf4 gs_InitGraph CONFIRM gs_InitGraph Function initializes graphics subsystem by calling display env setup, geometry state reset/init, and screen offset/clip updates, consistent with its name and us
+RK 0x8008dc68 gs_InitDispEnvs CONFIRM gs_InitDispEnvs Function initializes GPU draw and display environments via ResetGraph, PutDrawEnv, and PutDispEnv, matching the name.
+RK 0x8008dd84 gs_SetResolution CONFIRM gs_SetResolution Function stores width/height and flags into global state and calls geometry init, matching resolution setting behavior.
+RK 0x8008ddec gs_InitGeomState CONFIRM gs_InitGeomState Stores screen dimensions and initializes geometry state variables to identity/default values, matching the name.
+RK 0x8008e014 gs_FillBgPacket CONFIRM gs_FillBgPacket Body writes color, xy, wh fields into a GS packet buffer and calls AddPrim, matching the name.
+RK 0x8008e154 gs_ApplyScreenOffset CONFIRM gs_ApplyScreenOffset Function calculates screen center offsets and applies them via SetGeomOffset or PutDrawEnv, matching the name.
+RK 0x8008e264 gs_UpdateDrawArea CONFIRM gs_UpdateDrawArea Function updates draw area offsets/size in global state and calls PutDrawEnv, matching name and usage by init/clip callers.
+RK 0x8008e2e4 gs_InitViewObj CONFIRM gs_InitViewObj Copies global view matrix data into object fields and links parent, matching name.
+RK 0x8008e380 gs_SetViewMatrix CONFIRM gs_SetViewMatrix Calls SetRotMatrix and SetTransMatrix to establish the GTE view matrix, consistent with camera and model rendering callers.
+RK 0x8008e3ac gs_MulViewLocal CONFIRM gs_MulViewLocal Copies global view matrix, multiplies with local param, sets GTE matrix via Push/Mul/Pop and gs_SetLightMatrix_2.
+RK 0x8008e440 gs_ApplyRotMatrix CONFIRM gs_ApplyRotMatrix Body calls MulRotMatrix with a global matrix and argument, then sets the result as light matrix, matching name.
+RK 0x8008e470 gs_MulCoord CONFIRM gs_MulCoord Body performs matrix multiplication and translation vector addition, consistent with transforming coordinates.
+RK 0x8008e500 gs_MulCoordTrans CONFIRM gs_MulCoordTrans Body performs standard GS library coordinate transformation: applies rotation matrix to translation vector and adds new translation, matching the name.
+RK 0x8008e580 gs_MulCoordInPlace CONFIRM gs_MulCoordInPlace Function applies rotation matrix to translation vector and multiplies matrices in place, matching the name.
+RK 0x8008e7c4 gs_CallViewUpdate RENAME gs_SetGeomScreen Directly calls SetGeomScreen, a standard PsyQ GTE function for setting screen parameters.
+RK 0x8008e7e4 gs_RotateAlongVector RENAME gs_SetLightVector Normalizes input vector, stores it in global light matrix slots, and updates light matrix; no rotation angle or matrix multiplication occurs.
+RK 0x8008ee54 tmd_ParseObject CONFIRM tmd_ParseObject Function parses TMD object headers with two layouts based on flag bit 3, matching name and usage in graphics upload functions.
+RK 0x8008f014 gs_SetCurrentTable CONFIRM gs_SetCurrentTable Function stores a pointer to a graphics table into a global variable, consistent with setting the current GPU primitive buffer/table.
+RK 0x8008f184 gs_GetLw CONFIRM gs_GetLw Function traverses a parent chain of coordinate objects to compute and cache the final world matrix, matching the name 'Get Local-to-World'.
+RK 0x8008f444 gs_GetLs CONFIRM gs_GetLs Function traverses a parent chain of coordinate structures to compose a local-to-screen matrix, matching the name and usage in camera view updates.
+RK 0x8008f714 gs_GetLws CONFIRM gs_GetLws Walks parent chain to compose world/screen matrices for drawing, matching the name.
+RK 0x8008fac4 math_SqrtGte CONFIRM math_SqrtGte Uses GTE C2 registers to find leading zeros and normalizes input for a lookup table, effectively computing integer square root.
+RK 0x80091224 math_RotMatrixGte CONFIRM math_RotMatrixGte Body uses GTE coprocessor registers and trig table to compute rotation matrix components, matching the name.
+RK 0x80091424 math_RotMatrixGte_2 RENAME math_RotMatrixGte Only one variant exists in this context; suffix _2 is misleading as it builds the camera view rotation matrix via GTE RTN instruction.
+RK 0x80091634 math_RotMatrixGte_3 CONFIRM math_RotMatrixGte_3 Body uses GTE RTN3 instruction to compute rotation matrix components from angle table indices, fitting the provisional name.
+RK 0x80091834 sys_PatchKernelHandler CONFIRM sys_PatchKernelHandler Code compares existing kernel exception handler words with a patch table and overwrites them if different, followed by FlushCache, matching the name.
+RK 0x80091924 snd_SeqTick CONFIRM snd_SeqTick Function iterates through sound sequences/tracks, dispatching volume/fade/keyoff handlers per frame, matching the name.
+RK 0x80091b94 snd_SeqVolumeRamp CONFIRM snd_SeqVolumeRamp Function calculates volume delta via division, clamps to 0-127, and updates SPU volume, matching the name.
+RK 0x80091da4 snd_SeqKeyOffChannel CONFIRM snd_SeqKeyOffChannel Function calls snd_KeyOffByOwner and clears active flag bit 2, matching name and caller usage.
+RK 0x80091e44 snd_SeqAdvanceWrap CONFIRM snd_SeqAdvanceWrap Function is a trivial wrapper that sign-extends short arguments before calling snd_SeqAdvanceDelta, fitting the name.
+RK 0x80091e74 snd_SeqAdvanceDelta CONFIRM snd_SeqAdvanceDelta Function decrements a tick delta counter and triggers event parsing when the delta reaches zero, matching the name.
+RK 0x80091f70 snd_SeqLoopOrEnd CONFIRM snd_SeqLoopOrEnd Function increments loop counter, compares to max, rewinds sequence pointer on repeat, or clears flags and calls key-off/start-channel on end.
+RK 0x800921b4 snd_SeqParseEvent CONFIRM snd_SeqParseEvent Function parses MIDI status bytes (Note On/Off, CC, SysEx) and dispatches handlers via function pointers, matching the name.
+RK 0x80092564 snd_SeqReadDelta CONFIRM snd_SeqReadDelta Function parses variable-length delta bytes from stream and updates channel position, matching name.
+RK 0x80092614 snd_SeqStartChannel CONFIRM snd_SeqStartChannel Function resets channel state, clears flags, rewinds pointer, and sets playing bit, matching the name.
+RK 0x80092714 snd_SeqSetActive CONFIRM snd_SeqSetActive Function sets active flag and clears bit 3, called when bit 3 is set in tick loop
+RK 0x80092774 snd_InitSeqState CONFIRM snd_InitSeqState Copies default volume table to SPU regs, initializes voice manager, and clears channel state structures.
+RK 0x80092814 snd_InitAll_2 CONFIRM snd_InitAll_2 Function initializes SPU interrupt vector, default settings, and sequence state as a sub-step of the main sound initialization.
+RK 0x80092884 snd_SeqGetActive CONFIRM snd_SeqGetActive Function reads a status byte from a sequence track structure based on track and channel indices, consistent with checking if a specific sequence channel is acti
+RK 0x800928c4 snd_SeqOpen CONFIRM snd_SeqOpen Allocates a sequence slot from a bitmask, initializes it via snd_SeqInitFromData, and populates the command handler function table.
+RK 0x80092b54 snd_CmdSetChannel CONFIRM snd_CmdSetChannel Body reads a byte from a command stream into channel offset 0x26 and reads delta time, matching the name and audio command semantics.
+RK 0x80092bd4 snd_CmdNoteOn CONFIRM snd_CmdNoteOn Body implements MIDI Note On logic: retrieves tone attributes, handles legato/velocity flags, and advances sequence delta.
+RK 0x80092f54 snd_CmdSetVolume CONFIRM snd_CmdSetVolume Function stores volume byte at offset 0x60 and calls snd_ApplyChannelVolume, consistent with setting channel volume in a sequencer.
+RK 0x80093024 snd_CmdSetPan CONFIRM snd_CmdSetPan Function stores pan value at offset 0x27 and calls volume/pan apply, consistent with MIDI CC 10 (Pan) handling in caller.
+RK 0x800930f4 snd_CmdSetProgram CONFIRM snd_CmdSetProgram Function sets a program/tone attribute, applies volume/pan based on it, and reads sequence delta, consistent with MIDI program change handling.
+RK 0x800931e4 snd_CmdSustain CONFIRM snd_CmdSustain Code checks sustain pedal CC value (0x40 threshold) to toggle pedal state, matching MIDI sustain semantics.
+RK 0x80093294 snd_CmdSetReverbDepth UNSURE snd_CmdSetReverbDepth The function name is already descriptive and matches the behavior of setting reverb depth via a command handler, which fits the context of being called by snd_C
+RK 0x80093324 snd_CmdMarkerEvent CONFIRM snd_CmdMarkerEvent Body checks marker char '(' and stores marker value/count, matching name; caller dispatches control changes to it.
+RK 0x80093424 snd_CmdLoopPoint CONFIRM snd_CmdLoopPoint The function explicitly handles MIDI loop markers (0x14 start, 0x1e end) and manages the repeat counter/loop jump logic as described.
+RK 0x80093564 snd_CmdSetParamA CONFIRM snd_CmdSetParamA Function stores a byte parameter, increments a counter, and reads a delta from the sequence stream, consistent with setting an SPU voice parameter or control va
+RK 0x800935d4 snd_CmdSetParamB CONFIRM snd_CmdSetParamB Stores a byte parameter at offset 0x19, increments a counter at 0x1e, and reads a sequence delta, consistent with setting a byte-sized MIDI/SND parameter.
+RK 0x80093644 snd_CmdResetControllers CONFIRM snd_CmdResetControllers Resets reverb/pedal, sets default volume/pan, and clears params for a specific controller index.
+RK 0x80093704 snd_CmdEffectA RENAME snd_ModifyVagAttr Function fetches VAG attributes, modifies a byte from stack, and writes back, fitting the name ModifyVagAttr better than CmdEffectA.
+RK 0x80093794 snd_CmdEffectB CONFIRM snd_CmdEffectB Function reads VAG attributes, modifies effect byte based on param_4, and toggles reverb state, matching the provisional name.
+RK 0x80093854 snd_CmdEffectC CONFIRM snd_CmdEffectC Function fetches VAG attributes, modifies a specific byte (likely effect/command flag), and writes back, matching the name CmdEffect.
+RK 0x800938e4 snd_SetAdsrField13 RENAME snd_GetSetAdsrField13 Function fetches ADSR data, modifies byte at offset 0x13 from stack, and writes it back; name should reflect get-modify-set pattern rather than just 'set'.
+RK 0x80093974 snd_SetAttackLinear CONFIRM snd_SetAttackLinear Function unpacks ADSR, sets attack rate with mode 0 (linear), repacks, and updates VAG attributes, matching the name.
+RK 0x80093b24 snd_SetAttackExp CONFIRM snd_SetAttackExp Function unpacks ADSR envelope, sets attack mode byte (1) to exponential, repacks, and updates VAG attributes.
+RK 0x80093be4 snd_SetDecayRate CONFIRM snd_SetDecayRate Function unpacks ADSR, modifies decay rate byte, repacks and updates VAG attributes.
+RK 0x80093c94 snd_SetSustainLevel CONFIRM snd_SetSustainLevel Function unpacks ADSR, modifies the sustain level byte (bVar1), repacks, and updates VAG attributes, matching the name.
+RK 0x80093d44 snd_SetSustainRate CONFIRM snd_SetSustainRate Function unpacks ADSR, sets sustain rate field to provided value with mode flag 0, repacks, and updates VAG attributes.
+RK 0x80093df4 snd_SetSustainRateExp CONFIRM snd_SetSustainRateExp Body unpacks ADSR, sets sustain mode flag to 1, repacks, and updates VAG attributes, matching the name.
+RK 0x80093eb4 snd_SetReleaseRate CONFIRM snd_SetReleaseRate Function unpacks ADSR, sets release rate field to 0, repacks, and updates VAG attributes, matching the provisional name.
+RK 0x80093f64 snd_SetReleaseRateExp CONFIRM snd_SetReleaseRateExp Body retrieves VAG attributes, sets release mode flag to 1, repacks ADSR, and writes back, matching the name.
+RK 0x80094014 snd_SetSustainDirection CONFIRM snd_SetSustainDirection Code maps input value ranges to a 0/1 flag (direction) and updates ADSR sustain parameters via Get/SetVagAtr.
+RK 0x800940f4 snd_SetAdsrByte15 CONFIRM snd_SetAdsrByte15 Function retrieves VAG attributes, modifies a specific byte offset (stack +0x15) in the ADSR data structure, repacks it, and writes back, matching the name.
+RK 0x80094194 snd_SetAdsrByte16 CONFIRM snd_SetAdsrByte16 Function retrieves VAG attributes, modifies a specific byte offset in the stack buffer representing ADSR parameters, repacks them, and writes back to the voice 
+RK 0x80094234 snd_ApplyParamA RENAME snd_SetReverbMode Function is a trivial wrapper that passes a stack argument directly to snd_SetReverbMode, making the wrapper redundant or misnamed; renaming to reflect the actu
+RK 0x80094264 snd_ApplyReverbDepth CONFIRM snd_ApplyReverbDepth Wrapper passes stack arg to snd_SetReverbDepth, fitting the name.
+RK 0x80094294 snd_ApplyParamB CONFIRM snd_ApplyParamB Wrapper passes stack arg to snd_SetReverbDelay, consistent with applying a specific audio parameter.
+RK 0x800942c4 snd_ApplyParamC RENAME snd_ApplyReverbType Body directly calls snd_SetReverbType with a stack argument, making the generic 'ApplyParamC' name inaccurate.
+RK 0x800942f4 snd_ApplyParamC_2 RENAME snd_SetReverbTypeWrapper Function is a trivial wrapper that passes a stack argument to snd_SetReverbType, making the generic 'ApplyParamC' name inaccurate.
+RK 0x80094324 snd_CmdSetChannelParam RENAME snd_SeqParsePitchBend Reads pitch bend data and calls snd_PitchBendAll, matching MIDI pitch bend event parsing
+RK 0x800943d4 snd_CmdControlChange CONFIRM snd_CmdControlChange Function dispatches MIDI CC numbers (0,6,7,10,11, etc.) to specific handler functions via a jump table, matching the name.
+RK 0x80094604 snd_CmdSetTempo CONFIRM snd_CmdSetTempo Reads 3-byte tempo value, calculates tick rate via 60000000 division, and updates sequence state fields consistent with SPU MIDI tempo command.
+RK 0x800947d4 snd_CmdNoteOff CONFIRM snd_CmdNoteOff Function handles MIDI Note Off events (status 0x80/0x90 with velocity 0) by calling key-off helpers or checking mute masks, consistent with the name.
+RK 0x800948b4 snd_CmdProgramChange CONFIRM snd_CmdProgramChange Body stores program byte in channel tone table and reads delta, matching MIDI Program Change event handling in seq parser.
+RK 0x80094924 snd_SeqInitFromData CONFIRM snd_SeqInitFromData Function initializes a sequence channel structure from binary SEQ data, validates headers, and calculates timing parameters.
+RK 0x80094c74 snd_SeqPlayDefault CONFIRM snd_SeqPlayDefault Wrapper calls implementation with track 0 and default mode/repeat flags, fitting the name.
+RK 0x80094cac snd_SeqPlayWrap CONFIRM snd_SeqPlayWrap Function is a thin wrapper that sign-extends short/char arguments to int before calling snd_SeqPlayImpl, matching the provisional name.
+RK 0x80094cf4 snd_SeqPlayImpl CONFIRM snd_SeqPlayImpl Function initializes sequence state, sets play/stop flags based on mode parameter, and calls volume update, matching the name 'SeqPlayImpl'.
+RK 0x80094e14 snd_SetSpuCommonVolSel RENAME snd_SetSpuCommonAttr Function maps flags to SPU common attribute masks (0x100/0x200/0x1000/0x2000) and calls spu_SetCdExtAttr, matching SpuSetCommonAttr behavior rather than just vo
+RK 0x80094ed4 snd_SetMasterVolume CONFIRM snd_SetMasterVolume Sets SPU common attribute mask 3 (master volume) with left/right scaled by 0x81, called during audio init.
+RK 0x80094f24 snd_SetCdVolume RENAME snd_SetReverbDepth Code calls SpuSetReverbDepth with mask 6, not CD volume; name is incorrect.
+RK 0x80094f58 snd_SetCdVolumeScaled RENAME snd_SetReverbDepthScaled Function calculates scaled values and calls SpuSetReverbDepth, not a CD volume setter.
+RK 0x80094fb4 snd_SeqStopReset CONFIRM snd_SeqStopReset Function clears status flags, calls KeyOff/PedalOff, and resets channel parameters to defaults, matching the name.
+RK 0x80095134 snd_SeqStopResetTrack0 CONFIRM snd_SeqStopResetTrack0 Function acts as a wrapper calling snd_SeqStopReset with track index 0, consistent with name and usage in music/effect stop/restart logic.
+RK 0x8009515c snd_SeqStopResetWrap CONFIRM snd_SeqStopResetWrap Function is a simple wrapper that sign-extends short arguments before calling snd_SeqStopReset, matching the provisional name.
+RK 0x80095194 snd_SetReverbVolume CONFIRM snd_SetReverbVolume Function sets SPU reverb volume attributes (0xc0/0xc00) based on mode parameter, clamps inputs, and scales them for spu_SetCdExtAttr.
+RK 0x800952a4 snd_SeqInitTable CONFIRM snd_SeqInitTable Function initializes sequence channel tables with specific stride and default values, matching the name.
+RK 0x800954c4 snd_SetTickRateMode CONFIRM snd_SetTickRateMode Function sets SPU tick rate constants (60Hz/50Hz) based on video mode and input flags, matching the name.
+RK 0x80095614 snd_SetupTickCallback CONFIRM snd_SetupTickCallback Configures SPU tick timing via ResetRCnt/SetRCnt and installs snd_TickCallback/snd_TickToggle based on rate mode.
+RK 0x80095844 snd_SetupTickCallbackOn CONFIRM snd_SetupTickCallbackOn Wrapper calls setup with argument 1, consistent with enabling a callback.
+RK 0x80095864 snd_SetupTickCallbackOff CONFIRM snd_SetupTickCallbackOff Wrapper calls setup with 0 to disable callback
+RK 0x80095884 snd_TickCallback CONFIRM snd_TickCallback Function invokes an optional hook pointer and then a main sound tick function, matching the name.
+RK 0x800958d0 snd_TickToggle CONFIRM snd_TickToggle Function implements a toggle flag that executes an indirect sound tick function on every other call, matching the provisional name.
+RK 0x800958d8 snd_TickToggleTail CONFIRM snd_TickToggleTail Body toggles a global flag and calls a function pointer based on v0, consistent with a tick toggle tail fragment.
+RK 0x80095a94 snd_SeqSetFade CONFIRM snd_SeqSetFade Function sets fade target values or triggers volume update based on channel state, matching the name.
+RK 0x80095b24 snd_SeqSetFade_2 RENAME snd_SeqSetFade Generic fade setter for any track index, not just first track
+RK 0x80095b8c snd_SeqSetFade_3 CONFIRM snd_SeqSetFade_3 Sets fade parameters in a sequence structure, calling volume update if active, consistent with fade setter logic.
+RK 0x80095c1c snd_SeqGetVolume CONFIRM snd_SeqGetVolume Function constructs a voice ID from track/channel and calls the volume getter, matching its name.
+RK 0x80095c54 snd_SeqFadeStep CONFIRM snd_SeqFadeStep Function performs per-tick volume interpolation towards a target value, handles division for rate calculation, and clears fade flags (0x40/0x80) upon completion
+RK 0x80095e74 snd_ResetAllVoices CONFIRM snd_ResetAllVoices Function iterates through voice slots, resets attributes to defaults, and releases them, matching the name.
+RK 0x80095fc4 snd_GetProgAtr CONFIRM snd_GetProgAtr Function retrieves program attributes from a bank table based on indices and copies them to a buffer, matching the name.
+RK 0x800960d4 snd_GetVagAtr CONFIRM snd_GetVagAtr Function reads a 24-byte VAG attribute record from a tone table based on bank/program/tone index, matching the name and usage in callers.
+RK 0x80096314 snd_KeyOnVoice CONFIRM snd_KeyOnVoice Function sets up voice parameters, calculates pan/volume, selects bank/program, and triggers envelope/pitch setup for a key-on event.
+RK 0x80096670 snd_KeyOffVoice CONFIRM snd_KeyOffVoice Function validates voice index < 0x18, sets global voice ID, and calls snd_ReleaseVoice, matching key-off semantics for SPU voices.
+RK 0x800966e4 snd_SetReverbType CONFIRM snd_SetReverbType Function sets reverb mode parameter via SpuSetReverbModeParam, matching name and behavior.
+RK 0x80096758 snd_SetReverbDepthScaled CONFIRM snd_SetReverbDepthScaled Sets SPU reverb mode param command 6 and scales depth inputs by >>6 before calling SpuSetReverbModeParam.
+RK 0x800967b4 snd_SetReverbMode CONFIRM snd_SetReverbMode Function sets reverb mode parameters via SpuSetReverbModeParam and handles negative flags for off/on states, matching the name.
+RK 0x80096864 snd_SetReverbDelay CONFIRM snd_SetReverbDelay Sets reverb mode param 0x10 (delay) and calls SpuSetReverbModeParam
+RK 0x800968a4 snd_ReverbOff CONFIRM snd_ReverbOff Body calls SpuSetReverb(0); callers use it to disable reverb during init/reset/effect commands.
+RK 0x800968c4 snd_ReverbOn CONFIRM snd_ReverbOn Function directly calls SpuSetReverb(1) to enable reverb, matching the name and usage in callers.
+RK 0x800968e4 snd_SetVagAtr CONFIRM snd_SetVagAtr Function writes a 22-byte VAG tone attribute record to the tone table after selecting bank/program, matching name and callers.
+RK 0x80096ab4 snd_ResetVoiceVol RENAME snd_GetVoiceVolume Function retrieves volume via SpuGetVoiceVolume and returns it, not resetting it
+RK 0x80096b54 snd_GetVoiceVol CONFIRM snd_GetVoiceVol Function calls SpuGetVoiceVolume to retrieve raw volume data and normalizes it, matching the name.
+RK 0x80096c00 snd_SetVoiceVol CONFIRM snd_SetVoiceVol Code stores left/right volume scaled by 0x81 into voice record and sets update flags, matching name.
+RK 0x80096c84 snd_VoiceRestartEnvelope CONFIRM snd_VoiceRestartEnvelope Function resets voice volume, clears flags, and loads pitch/ADSR data from tone structures, matching the name.
+RK 0x80096e54 snd_PedalOff CONFIRM snd_PedalOff Function sets a global to 0, called by sustain command handler when value < 64, matching MIDI sustain pedal off behavior.
+RK 0x80096e64 snd_PedalOn CONFIRM snd_PedalOn Sets sustain pedal state global to 2, called by snd_CmdSustain when velocity >= 0x40.
+RK 0x80096e74 snd_UpdateVoices_2 CONFIRM snd_UpdateVoices_2 Function polls voice envelopes, updates attributes via SpuSetVoiceAttr, and handles key-on/off/reverb/noise flags, matching the provisional name.
+RK 0x80097304 snd_InitVoiceMgr CONFIRM snd_InitVoiceMgr Body initializes SPU voice attributes, clears voice/bank tables, and sets max voices, matching the name.
+RK 0x80097654 snd_KeyOnImpl CONFIRM snd_KeyOnImpl Function implements core SPU key-on logic: selects bank/program, allocates voice, sets envelope/pitch/volume, and handles note-off matching, fitting the provisi
+RK 0x80097b70 snd_KeyOffMatching CONFIRM snd_KeyOffMatching Function iterates voice slots, matches note/bank/program/tone parameters, and releases or clears matching voices, consistent with key-off logic.
+RK 0x80097cd0 snd_KeyOnBalanced CONFIRM snd_KeyOnBalanced Code calculates stereo pan balance from two volume inputs and calls key-on implementation, matching the name.
+RK 0x80097dbc snd_KeyOffManual CONFIRM snd_KeyOffManual Wrapper calls key-off matching with hardcoded manual ID 0x21, fitting the name.
+RK 0x80097e04 snd_AllocVoice CONFIRM snd_AllocVoice Function iterates voice slots, selects one based on priority/steal logic, and returns the index, matching the provisional name.
+RK 0x80098074 snd_CalcPitchDefault CONFIRM snd_CalcPitchDefault Clamps a global fine-tune byte to 0x7F and calls snd_CalcPitch with current note globals, matching the name.
+RK 0x800980c0 snd_CalcPitchFromTone CONFIRM snd_CalcPitchFromTone Function calculates pitch using tone center and fine tune parameters, consistent with name and usage in KeyOn/PitchBend.
+RK 0x80098254 snd_KeyOnVoiceSetup CONFIRM snd_KeyOnVoiceSetup Function calculates final SPU volume/pan from global voice parameters and sets key-on flags, matching the name.
+RK 0x800987c4 snd_ClearVoiceSlot CONFIRM snd_ClearVoiceSlot Function zeroes specific state bytes for a voice index, matching the name and its use in key-off handling.
+RK 0x80098804 snd_ReleaseVoice CONFIRM snd_ReleaseVoice Function clears voice state arrays and updates key-off/on masks for a specific voice index, matching the name.
+RK 0x800988c4 snd_KeyOnVoiceSetup_2 CONFIRM snd_KeyOnVoiceSetup_2 Function calculates voice volume/pan based on key-on parameters and global state, matching the name 'KeyOnVoiceSetup'.
+RK 0x80098d94 snd_PitchBendVoice CONFIRM snd_PitchBendVoice Function matches MIDI pitch bend logic: checks voice bank/program/note, calculates new pitch using bend value and tables, updates voice pitch register.
+RK 0x80098f80 snd_PitchBendAll CONFIRM snd_PitchBendAll Function iterates through all voices for a specific channel/program combination and applies pitch bend, matching the name and caller usage.
+RK 0x80099064 snd_SetProgAttrByte1 CONFIRM snd_SetProgAttrByte1 Function validates bank/program via snd_SelectBankProgram and writes the third argument to byte offset 1 of the program attribute record, matching the name.
+RK 0x800990d4 snd_GetProgAttrByte1 CONFIRM snd_GetProgAttrByte1 Function selects a bank/program and returns the second byte (index 1) of the attribute record, matching the name.
+RK 0x80099124 snd_SetProgAttrByte4 CONFIRM snd_SetProgAttrByte4 Function validates bank/program via snd_SelectBankProgram and writes to offset 4 of the program attribute record, matching the name.
+RK 0x80099194 snd_GetProgAttrByte4 CONFIRM snd_GetProgAttrByte4 Function validates bank/program via snd_SelectBankProgram and returns byte at offset 4 of the program attribute table, matching the name.
+RK 0x800991e4 snd_SeqSetVolumeUpdate CONFIRM snd_SeqSetVolumeUpdate Sets seq volume fields, clamps to 0x7f, and iterates voices to recompute final L/R volumes based on bank/pan/expr.
+RK 0x80099750 snd_GetSeqVolumes CONFIRM snd_GetSeqVolumes Function extracts left and right volume values from a sequence record based on channel index, matching the name and usage in callers.
+RK 0x80099844 snd_KeyOffByOwner CONFIRM snd_KeyOffByOwner Iterates active voices and releases those matching the owner ID (channel/track), consistent with callers stopping sequences.
+RK 0x800998f4 snd_CollectToneLayers CONFIRM snd_CollectToneLayers Function iterates through tone layer data, checks if the current note falls within each layer's key range, and collects matching layer indices into output array
+RK 0x800999c4 snd_ApplyChannelVolume CONFIRM snd_ApplyChannelVolume Function iterates voices for a channel, recalculating left/right volume based on program, bank, and pan parameters, matching the name and caller usage.
+RK 0x80099f64 snd_SelectBankProgram CONFIRM snd_SelectBankProgram Function validates bank/program indices and sets global pointers to corresponding bank tables, matching the name.
+RK 0x8009a024 snd_SetStereoMode CONFIRM snd_SetStereoMode Function sets a global flag to 1, called in the else branch of a stereo/mono check in music_ApplyVolume.
+RK 0x8009a034 snd_SetMonoMode CONFIRM snd_SetMonoMode Function sets a global flag to 0, and the caller explicitly invokes it in the else branch of a stereo/mono check.
+RK 0x8009a044 snd_VabClose CONFIRM snd_VabClose Frees SPU bank slot, decrements count, and resets transfer flag if pending.
+RK 0x8009a0f4 snd_VabTransferEnd CONFIRM snd_VabTransferEnd Function checks bank slot status, clears transfer busy flag via spu_SetTransferDoneFlag, and marks slot ready, matching the name.
+RK 0x8009a164 snd_VabOpenHead CONFIRM snd_VabOpenHead Function name matches standard PsyQ SDK function SsVabOpenHead, and it calls the implementation with a default callback label.
+RK 0x8009a198 snd_VabOpenHead_2 CONFIRM snd_VabOpenHead_2 Wrapper calls VAB open impl with a local callback label, fitting the provisional name.
+RK 0x8009a1d4 snd_VabOpenHeadImpl CONFIRM snd_VabOpenHeadImpl Function validates VAB header magic, allocates bank slot, calculates SPU memory requirements, and calls allocator callback, matching standard VAB opening logic.
+RK 0x8009a5c4 snd_VabTransferBody CONFIRM snd_VabTransferBody Function sets SPU transfer mode/address and writes VAB body data to SPU RAM, matching the name.
+RK 0x8009a684 snd_VabTransferDoneCheck CONFIRM snd_VabTransferDoneCheck Directly wraps SpuIsTransferCompleted to check if a VAB transfer is finished.
+RK 0x8009a6b4 snd_SpuInitDefault CONFIRM snd_SpuInitDefault Function simply calls snd_SpuInit(1), fitting the name 'Default' initialization.
+RK 0x8009a6d4 snd_SpuInit CONFIRM snd_SpuInit Function resets SPU, sets voice volumes, initializes events, and clears state globals as described.
+RK 0x8009a7bc spu_InitEvents CONFIRM spu_InitEvents Function initializes SPU event callbacks and enables the transfer done interrupt, matching the name.
+RK 0x8009aac4 spu_TransferPio_2 CONFIRM spu_TransferPio_2 Implements SPU PIO data transfer with handshake/timeout logic, matching the provisional name.
+RK 0x8009ac7c spu_TransferDone_2 CONFIRM spu_TransferDone_2 Body implements SPU transfer completion logic (waiting for transfer bit clear, delivering event), matching the provisional name.
+RK 0x8009ad38 spu_StartDmaWrite_2 CONFIRM spu_StartDmaWrite_2 Code sets SPU DMA write registers (address, size, control) and triggers transfer via spu_DmaPrioritySet_2, matching the provisional name.
+RK 0x8009ade8 spu_TransCtrl_2 CONFIRM spu_TransCtrl_2 Implements SPU transfer control logic (wait for status, set priority, configure DMA channels) consistent with the provisional name.
+RK 0x8009b374 spu_CallMode4 CONFIRM spu_CallMode4 Wrapper passes mode 4 and callback to DMACallback, fitting SPU DMA setup
+RK 0x8009bc14 spu_ReverbAreaOk CONFIRM spu_ReverbAreaOk Function checks if a requested reverb work area address is valid by scanning the SPU allocation table for free blocks, matching its name and usage in SpuSetReve
+RK 0x8009bca4 SpuSetReverbModeParam CONFIRM SpuSetReverbModeParam Function implements standard SPU reverb parameter setting logic (mask-driven updates to reverb registers, work area, and mode) consistent with PsyQ SDK behavior
+RK 0x8009cce4 spu_SetCdExtAttr RENAME spu_SetVolumeMix Callers use it to set master, reverb, and common volume levels via mask bits, not just CD/Ext attributes.
+RK 0x8009d990 snd_GetPlayStateCode RENAME snd_GetSequenceStatus Function retrieves a sequence object via callback and maps internal state bytes to simplified codes, fitting the name GetSequenceStatus better than PlayStateCod
+RK 0x8009da5c snd_QuerySeqInfo CONFIRM snd_QuerySeqInfo Function queries specific fields from a sequence object based on selector, matching the provisional name.
+RK 0x8009da64 snd_QuerySeqInfo_2 CONFIRM snd_QuerySeqInfo_2 Function retrieves specific sequence metadata fields based on selector ID, matching the provisional description.
+RK 0x8009db54 snd_QuerySeqEntry CONFIRM snd_QuerySeqEntry Function retrieves a specific byte from a 5-byte sequence entry record based on index, matching the name.
+RK 0x8009db5c snd_QuerySeqEntry_2 CONFIRM snd_QuerySeqEntry_2 Function retrieves specific byte fields (1-5) from a sequence entry record or count, matching the name.
+RK 0x801951e4 loader_CallSub8019cc4c RENAME loader_SsSeqCalledTbyT Direct wrapper for SsSeqCalledTbyT
+RK 0x80195b9c CdStatus CONFIRM CdStatus Function returns a global byte representing CD drive status, consistent with callers checking specific bits (0x10, 0xe0) for shell open or read errors.
+RK 0x80195bac CdMode CONFIRM CdMode Function simply returns a global byte representing the current CD drive mode, matching the name and usage in cd_ReadStartOrRetry.
+RK 0x80195bd8 CdReset_2 RENAME CdInitMode2 Function initializes CD controller or resets callbacks based on mode parameter, fitting CdInit semantics better than generic Reset.
+RK 0x80195c44 cd_FlushQueue RENAME cd_ResetController Function body is a direct call to cd_ResetController, making the wrapper redundant or misnamed as FlushQueue.
+RK 0x80195c64 CdDataCallback_2 RENAME CdSetCallback_2 Function sets a callback pointer in a global variable, matching the SDK CdSetCallback behavior.
+RK 0x80196104 cd_StartOp801971dc RENAME cd_Mix Body only calls CdMix_2, so name should reflect mixing operation rather than referencing callee address
+RK 0x80196164 cd_SetDmaCallback3 CONFIRM cd_SetDmaCallback3 Function sets DMA callback for channel 3 (CD) via DMACallback_2, consistent with CD read operations in callers.
+RK 0x80196188 cd_CallSub80197654 RENAME cd_StopDmaTransfer Wrapper calls cd_DataSync to halt DMA transfer before reconfiguring callbacks in read/pause logic
+RK 0x801971dc CdMix_2 RENAME cd_SetVolumeMatrix Writes volume values to CDROM registers for channels 2 and 3, matching SDK volume setting behavior.
+RK 0x80197a8c CdSearchFile_Prefix RENAME CdSearchFile Function performs full CD file search by parsing path and calling cd_FindDirIndex/cd_CacheDirectoryFiles, matching standard SDK name.
+RK 0x80198ffc etc_DispatchSlot0C UNSURE etc_DispatchSlot0C Name is already descriptive and accurate for a generic callback dispatcher; callers use it to invoke specific subsystem handlers (CD, GPU) via table slot 0xc.
+RK 0x8019908c VSyncCallback CONFIRM VSyncCallback Function calls a table slot offset +0x14 with arg 4, typical for dispatching a VSync event in PsyQ/SDK callbacks.
+RK 0x801990c0 etc_DispatchSlot14 CONFIRM etc_DispatchSlot14 Body is a direct jump through offset 0x14 of a global callback table, matching the provisional name.
+RK 0x801990f0 etc_DispatchSlot10 CONFIRM etc_DispatchSlot10 Function body directly matches the name by dereferencing a pointer table and calling the function at offset 0x10.
+RK 0x80199120 etc_DispatchSlot18 CONFIRM etc_DispatchSlot18 Body is a direct jump through callback table slot 0x18, matching the provisional name.
+RK 0x8019c514 gpu_InitDisplayMode CONFIRM gpu_InitDisplayMode Function queries GPU status (GP1 0x10000007) and sets display mode flags based on NTSC/PAL detection, matching the name.
